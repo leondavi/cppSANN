@@ -1,3 +1,7 @@
+import os
+
+os.remove(".sconsign.dblite")
+
 # Set our required libraries
 libraries 		= []
 library_paths 	= ''

@@ -7,12 +7,3 @@
 
 #include "../include/Layer.h"
 
-Layer::Layer() {
-	// TODO Auto-generated constructor stub
-
-}
-
-Layer::~Layer() {
-	// TODO Auto-generated destructor stub
-}
-
