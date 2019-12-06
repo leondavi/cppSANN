@@ -1,30 +1,19 @@
-from __future__ import print_function
+# Set our required libraries
+libraries 		= []
+library_paths 	= ''
+cppDefines 		= {}
+cppFlags 		= ['-Wall']#, '-Werror']
+cxxFlags 		= ['-std=c++11']
 
-# Global Python includes
-import itertools
-import os
-import re
-import shutil
-import subprocess
-import sys
-
-from os import mkdir, environ
-from os.path import abspath, basename, dirname, expanduser, normpath
-from os.path import exists,  isdir, isfile
-from os.path import join as joinpath, split as splitpath
-from re import match
-
-def print_info(text):
-	print("[info] "+text)
-
-
+# define the attributes of the build environment shared between
+# both the debug and release builds
 env = Environment()
+env.Append(LIBS 			= libraries)
+env.Append(LIBPATH 		= library_paths)
+env.Append(CPPDEFINES 	= cppDefines)
+env.Append(CPPFLAGS 		= cppFlags)
+env.Append(CXXFLAGS 		= cxxFlags)
 
-debug = ARGUMENTS.get('debug', 0)
+env.VariantDir('build/src','src',duplicate=0)
 
-if int(debug):
-	print_info("cxx debug flag -g is on")
-	env.Append(CCFLAGS = '-g')
-
-
-SConscript(['src/SConscript'],variant_dir='build',exports={'env':env},duplicate = 0)
+env.SConscript('src/SConscript', {'env': env})
