@@ -24,7 +24,6 @@ class Layer
 private:
 	uint32_t layer_size_;
 	VectorXd neurons_;
-	double bias_;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
 	std::weak_ptr<Layer> next_layer_ptr_;
@@ -37,7 +36,7 @@ private:
 public:
 
 	Layer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer_ptr,std::weak_ptr<Layer> next_layer_ptr) :
-		layer_size_(layer_size),neurons_(layer_size),bias_(0),
+		layer_size_(layer_size),neurons_(layer_size),
 		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
 	{
 

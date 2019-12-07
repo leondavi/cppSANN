@@ -7,12 +7,18 @@
 
 #include "../include/Weights.h"
 
-Weights::Weights() {
-	// TODO Auto-generated constructor stub
+namespace WeightsNormalization
+{
 
+	/**
+	 * Normalizing the weights by the standard deviation of weigths_in matrix
+	 */
+	void NormalizeByInputSize(MatrixXd &weights_in)
+	{
+		double normalization_factor = sqrt(weights_in.cols());
+		change_vals_by_func(weights_in,[normalization_factor](double cell_val)
+				{
+					return cell_val/normalization_factor;
+				});
+	}
 }
-
-Weights::~Weights() {
-	// TODO Auto-generated destructor stub
-}
-
