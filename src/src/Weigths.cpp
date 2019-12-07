@@ -5,14 +5,14 @@
  *      Author: david
  */
 
-#include "../include/Weigths.h"
+#include "../include/Weights.h"
 
-Weigths::Weigths() {
+Weights::Weights() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Weigths::~Weigths() {
+Weights::~Weights() {
 	// TODO Auto-generated destructor stub
 }
 

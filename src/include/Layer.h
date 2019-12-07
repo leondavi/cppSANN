@@ -11,7 +11,8 @@
 #include <eigen3/Eigen/Dense>
 #include <stdlib.h>
 #include <memory>
-#include "Weigths.h"
+
+#include "Weights.h"
 
 using namespace Eigen;
 
@@ -21,19 +22,38 @@ using namespace Eigen;
 class Layer
 {
 private:
+	uint32_t layer_size_;
+	VectorXd neurons_;
+	double bias_;
+
 	std::weak_ptr<Layer> previous_layer_ptr_;
 	std::weak_ptr<Layer> next_layer_ptr_;
-public:
-	Layer(std::weak_ptr<Layer> previous_layer_ptr,std::weak_ptr<Layer> next_layer_ptr) :
-		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
+	std::weak_ptr<Weights> input_weights_ptr_;
+	std::weak_ptr<Weights> output_weights_ptr_;
 
+
+
+
+public:
+
+	Layer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer_ptr,std::weak_ptr<Layer> next_layer_ptr) :
+		layer_size_(layer_size),neurons_(layer_size),bias_(0),
+		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
 	{
 
 	}
-	virtual ~Layer();
+	virtual ~Layer() {}
 
-	inline std::weak_ptr<Layer> get_previous_layer_ptr() { return this->previous_layer_ptr_; }
-	inline std::weak_ptr<Layer> get_next_layer_ptr() { return this->next_layer_ptr_; }
+	//---- getters ----//
+	virtual inline std::weak_ptr<Layer> get_previous_layer_ptr() { return this->previous_layer_ptr_; }
+	virtual inline std::weak_ptr<Layer> get_next_layer_ptr() { return this->next_layer_ptr_; }
+	virtual inline std::weak_ptr<Weights> get_input_weights_ptr() { return this->input_weights_ptr_; }
+	virtual inline std::weak_ptr<Weights> get_output_weights_ptr() { return this->output_weights_ptr_; }
+
+
+	//---- setters ----//
+
+
 
 };//end of Layer
 
@@ -44,6 +64,31 @@ private:
 
 
 public:
+
+	InputLayer(uint32_t layer_size,std::weak_ptr<Layer> next_layer);
+
+	//---- getters ----//
+
+	inline std::weak_ptr<Layer> get_previous_layer_ptr() override { return std::weak_ptr<Layer>(); }//No previous in this layer
+	inline std::weak_ptr<Weights> get_input_weights_ptr() override { return std::weak_ptr<Weights>(); }//No input weights to this layer
+
+
+};//end of InputLayer
+
+
+class OutputLayer :  public Layer
+{
+private:
+
+
+public:
+	OutputLayer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer);
+
+	//---- getters ----//
+
+	inline std::weak_ptr<Layer> get_next_layer_ptr() override { return std::weak_ptr<Layer>(); }//No next layer after the output layer
+	inline std::weak_ptr<Weights> get_output_weights_ptr() override { return std::weak_ptr<Weights>(); }//No output weights to this layer
+
 
 };//end of InputLayer
 
