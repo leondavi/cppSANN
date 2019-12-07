@@ -9,7 +9,6 @@
 
 namespace WeightsNormalization
 {
-
 	/**
 	 * Normalizing the weights by the standard deviation of weigths_in matrix
 	 */

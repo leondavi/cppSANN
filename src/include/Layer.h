@@ -31,8 +31,6 @@ private:
 	std::weak_ptr<Weights> output_weights_ptr_;
 
 
-
-
 public:
 
 	Layer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer_ptr,std::weak_ptr<Layer> next_layer_ptr) :
