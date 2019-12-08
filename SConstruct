@@ -1,6 +1,8 @@
 import os
 
-os.remove(".sconsign.dblite")
+
+if os.path.isfile(".sconsign.dblite"):
+	os.remove(".sconsign.dblite")
 
 # Set our required libraries
 libraries 		= []
