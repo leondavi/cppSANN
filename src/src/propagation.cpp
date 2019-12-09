@@ -16,10 +16,6 @@ namespace Propagation
 /************************************/
 
 
-bool ForwardPropagation::validity_check()
-{
-	return false;
-}
 
 bool ForwardPropagation::execute()
 {
