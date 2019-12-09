@@ -33,7 +33,7 @@ inline Eigen::VectorXd randn(uint32_t size,double mu=0.,double var=1.)
 }
 
 /**
- * function changes the value of cell
+ * function changes the value of each cell in mat by given func
  */
 inline void set_vals_by_func(Eigen::MatrixXd &mat, std::function<double()> &func)
 {
@@ -47,7 +47,7 @@ inline void set_vals_by_func(Eigen::MatrixXd &mat, std::function<double()> &func
 }
 
 /**
- * Function receives current state of cell and change it accordingly
+ *  function changes the value of each cell in mat by given func. func receives current cell valu as a param.
  */
 inline void change_vals_by_func(Eigen::MatrixXd &mat,std::function<double(double)> func)
 {
