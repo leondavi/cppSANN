@@ -11,7 +11,19 @@
 //************* Layer ************//
 
 
+bool Layer::connect_next(std::weak_ptr<Layer> next_layer,std::weak_ptr<Weights> output_weights_ptr_ )
+{
 
+	if (next_layer.expired()) { set_disconnected(); return false; } //check next layer exists
+	std::shared_ptr<Layer> next_layer_inst = next_layer.lock();
+
+	this->next_layer_ptr_ = next_layer; //connect to the next layer
+	next_layer_inst->set_previous_layer_ptr(std::weak_ptr<Layer>(getptr()));
+
+
+
+	return false;
+}
 
 
 

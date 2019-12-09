@@ -23,8 +23,6 @@ private:
 
 	std::shared_ptr<InputLayer> input_layer_ptr_;
 
-	bool validity_check();
-
 public:
 
 	ForwardPropagation(std::shared_ptr<InputLayer> input_layer_ptr) : input_layer_ptr_(input_layer_ptr)
