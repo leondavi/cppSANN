@@ -5,7 +5,10 @@
  *      Author: david
  */
 
-#include "../include/propagation.h"
+#include "include/propagation.h"
+
+namespace ANN
+{
 
 namespace Propagation
 {
@@ -22,6 +25,7 @@ bool ForwardPropagation::execute()
 	return false;
 }
 
+}
 
 }
 

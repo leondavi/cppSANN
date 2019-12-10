@@ -17,6 +17,8 @@
 
 using namespace Eigen;
 
+namespace ANN
+{
 /**
  * This class represents a single layer
  */
@@ -24,7 +26,7 @@ class Layer : std::enable_shared_from_this<Layer>
 {
 private:
 	uint32_t layer_size_;
-	VectorXd neurons_;
+	VectorXd neurons_; //column vector
 	bool connected;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
@@ -53,6 +55,8 @@ public:
 	virtual inline std::weak_ptr<Layer> get_next_layer_ptr() { return this->next_layer_ptr_; }
 	virtual inline std::shared_ptr<Weights> get_input_weights_ptr() { return this->input_weights_ptr_; }
 	virtual inline std::shared_ptr<Weights> get_output_weights_ptr() { return this->output_weights_ptr_; }
+
+	inline uint32_t get_layer_size() { return this->layer_size_; }
 
 	bool is_connected() { return this->connected; }
 
@@ -110,5 +114,7 @@ public:
 	}
 
 };//end of InputLayer
+
+}//end of namespace ANN
 
 #endif /* SRC_LAYER_H_ */

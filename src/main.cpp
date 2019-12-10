@@ -1,6 +1,6 @@
 
 
-#include "../include/definitions.hh"
+#include "include/definitions.hh"
 
 int main(int ac, char** av);
 /**

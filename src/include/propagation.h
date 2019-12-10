@@ -11,7 +11,8 @@
 #include <memory>
 #include "Layer.h"
 
-
+namespace ANN
+{
 
 namespace Propagation
 {
@@ -47,6 +48,8 @@ public:
 
 };
 
-}//end of namespace
+}//end of namespace Propagation
+
+}//end of namespace ANN
 
 #endif /* SRC_INCLUDE_PROPAGATION_H_ */

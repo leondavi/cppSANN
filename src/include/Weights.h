@@ -13,10 +13,15 @@
 
 using namespace Eigen;
 
+namespace ANN
+{
+
 namespace WeightsNormalization
 {
-	void NormalizeByInputSize(MatrixXd &weights_in);
+	void NormalizedByInputSize(MatrixXd &weights_in);
 }
+
+
 
 class Weights
 {
@@ -27,14 +32,10 @@ class Weights
 public:
 
 	//TODO add custom weights by function
-	Weights(uint32_t rows, uint32_t cols, double mu = 0, double sig = 1)
-	{
-		this->weights_mat_= randn(rows,cols,mu,sig);
-		WeightsNormalization::NormalizeByInputSize(this->weights_mat_);
-		bias_ = 0;
-	}
+	Weights(uint32_t rows, uint32_t cols, double bias = 1, double mu = 0, double sig = 1);
 	Weights(MatrixXd weights_mat,double bias) : weights_mat_(weights_mat),bias_(bias) { }
-	virtual ~Weights();
+
+	~Weights() {}
 
 	//---- getters -----//
 
@@ -42,5 +43,7 @@ public:
 	void set_bias(double bias_val) { this->bias_ = bias_val; }
 
 };
+
+}
 
 #endif /* SRC_WEIGTHS_H_ */
