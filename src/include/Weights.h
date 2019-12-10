@@ -9,7 +9,8 @@
 #define SRC_WEIGTHS_H_
 
 #include <eigen3/Eigen/Dense>
-#include "math_methdos.h"
+
+#include "math_methods.h"
 
 using namespace Eigen;
 
