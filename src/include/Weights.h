@@ -35,7 +35,7 @@ public:
 	//TODO add custom weights by function
 	Weights(uint32_t rows, uint32_t cols, double bias = 1, double mu = 0, double sig = 1);
 	Weights(uint32_t rows, uint32_t cols, int val);
-	Weights(MatrixXd weights_mat,double bias) : weights_mat_(weights_mat),bias_(bias) { }
+	Weights(MatrixXd weights_mat,double bias = 0) : weights_mat_(weights_mat),bias_(bias) { }
 
 	~Weights() {}
 
@@ -48,7 +48,14 @@ public:
 	//---- setters ----//
 	void set_bias(double bias_val) { this->bias_ = bias_val; }
 
-	MatrixXd dot(VectorXd given_vec){ return this->weights_mat_*given_vec.asDiagonal();}// in place dot
+	MatrixXd dot(VectorXd given_vec)
+	{
+		if (this->weights_mat_.cols() != given_vec.rows())
+		{
+			throw std::runtime_error("[Weights] Error given_vec and weights_mat_ dimensions for dot product");
+		}
+		return (this->weights_mat_*given_vec.asDiagonal()).rowwise().sum();
+	}
 
 
 
