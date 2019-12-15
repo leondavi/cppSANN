@@ -12,6 +12,9 @@ project_dir = os.getcwd()
 build_dir = os.path.join(project_dir,'build')
 src_dir = os.path.join(project_dir,'src')
 
+
+
+
 # Set our required libraries
 libraries 		= []
 library_paths 	= ''
@@ -30,6 +33,10 @@ env.Append(CPPDEFINES 	= cppDefines)
 env.Append(CPPFLAGS 		= cppFlags)
 env.Append(CXXFLAGS 		= cxxFlags)
 env.AppendUnique(CPPPATH = include_paths)
+
+debug = ARGUMENTS.get('debug_info', 0)
+if int(debug):
+	env.Append(CPPFLAGS = '-g')
 
 cpp_files = dict()
 

@@ -25,6 +25,10 @@ namespace WeightsNormalization
 	}
 }
 
+Weights::Weights(uint32_t rows, uint32_t cols,int val) : bias_(0)
+{
+	this->weights_mat_= val*MatrixXd::Ones(rows,cols);
+}
 
 Weights::Weights(uint32_t rows, uint32_t cols,double bias, double mu, double sig)
 {
