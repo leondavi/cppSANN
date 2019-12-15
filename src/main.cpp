@@ -23,7 +23,7 @@ int main(int ac, char** av)
 
 	std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
-	dprod_vec = dprod_vec.unaryExpr(&sigmoid);
+	dprod_vec = dprod_vec.unaryExpr(&Activations::sigmoid);
 
 
 //	std::cout<<"After: "<<*new_weight.get_weights_mat()<<std::endl;
