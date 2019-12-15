@@ -19,12 +19,15 @@ int main(int ac, char** av)
 	ANN::Weights new_weight(m);
 	VectorXd sample_vec(3); sample_vec << 1,2,3;
 	std::cout<<"Before: "<<*new_weight.get_weights_mat()<<std::endl;
-	VectorXd dprod_vec = new_weight.dot(sample_vec);
+	VectorXd dprod_vec = new_weight.dot(sample_vec)/100;
 
-	//sigmoid(dprod_vec);
+	std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
-	std::cout<<"After: "<<*new_weight.get_weights_mat()<<std::endl;
-	std::cout<<"sample_vec: \n"<<sample_vec<<std::endl;
+	dprod_vec = dprod_vec.unaryExpr(&sigmoid);
+
+
+//	std::cout<<"After: "<<*new_weight.get_weights_mat()<<std::endl;
+//	std::cout<<"sample_vec: \n"<<sample_vec<<std::endl;
 	std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
 
