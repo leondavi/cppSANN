@@ -18,7 +18,7 @@ namespace WeightsNormalization
 	void NormalizedByInputSize(MatrixXd &weights_in)
 	{
 		double normalization_factor = sqrt((double)weights_in.cols());
-		change_vals_by_func(weights_in,[normalization_factor](double cell_val)
+		ExtMath::change_vals_by_func(weights_in,[normalization_factor](double cell_val)
 				{
 					return cell_val/normalization_factor;
 				});
@@ -32,7 +32,7 @@ Weights::Weights(uint32_t rows, uint32_t cols,int val) : bias_(0)
 
 Weights::Weights(uint32_t rows, uint32_t cols,double bias, double mu, double sig)
 {
-	this->weights_mat_= randn(rows,cols,mu,sig);
+	this->weights_mat_= ExtMath::randn(rows,cols,mu,sig);
 	WeightsNormalization::NormalizedByInputSize(this->weights_mat_);
 	bias_ = bias;
 }

@@ -48,13 +48,9 @@ public:
 	//---- setters ----//
 	void set_bias(double bias_val) { this->bias_ = bias_val; }
 
-	MatrixXd dot(VectorXd given_vec)
+	VectorXd dot(VectorXd given_vec)
 	{
-		if (this->weights_mat_.cols() != given_vec.rows())
-		{
-			throw std::runtime_error("[Weights] Error given_vec and weights_mat_ dimensions for dot product");
-		}
-		return (this->weights_mat_*given_vec.asDiagonal()).rowwise().sum();
+		return ExtMath::dot(this->weights_mat_,given_vec);
 	}
 
 
