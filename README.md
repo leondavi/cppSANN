@@ -1,3 +1,5 @@
+Still in development 
+
 # cppSANN
 
 This library is a simple implementation of artificial neural network.
