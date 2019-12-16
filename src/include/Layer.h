@@ -29,7 +29,6 @@ class Layer : std::enable_shared_from_this<Layer>
 private:
 	uint32_t layer_size_;
 	VectorXd neurons_; //column vector
-	bool connected;
 	int layer_type;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
@@ -37,16 +36,13 @@ private:
 	std::shared_ptr<Weights> input_weights_ptr_;
 	std::shared_ptr<Weights> output_weights_ptr_;
 
-	inline void set_connected() { this->connected = true; }
-	inline void set_disconnected() { this->connected = false; }
-
 	std::shared_ptr<Layer> getptr() { return std::shared_ptr<Layer>(this); }
 
 
 public:
 
 	Layer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer_ptr,std::weak_ptr<Layer> next_layer_ptr) :
-		layer_size_(layer_size),neurons_(layer_size),connected(false),layer_type(NORMAL_LAYER),
+		layer_size_(layer_size),neurons_(layer_size),layer_type(NORMAL_LAYER),
 		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
 	{
 
@@ -62,11 +58,10 @@ public:
 	inline uint32_t get_layer_size() { return this->layer_size_; }
 	virtual inline int get_layer_type() { return this->layer_type; }
 
-	bool is_connected() { return this->connected; }
+	bool get_has_next();
 
 
-	virtual bool connect_next(std::weak_ptr<Layer> next_layer,
-							  std::weak_ptr<Weights> output_weights_ptr_ =  std::weak_ptr<Weights>());
+	virtual bool connect_next(std::weak_ptr<Layer> next_layer);
 
 	//---- setters ----//
 
