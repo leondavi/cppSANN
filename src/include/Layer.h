@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "Weights.h"
+#include "activation_functions.h"
 
 
 using namespace Eigen;
@@ -30,6 +31,7 @@ private:
 	uint32_t layer_size_;
 	VectorXd neurons_; //column vector
 	int layer_type;
+	std::function<double(double)> activation_func_;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
 	std::weak_ptr<Layer> next_layer_ptr_;
@@ -41,7 +43,9 @@ private:
 
 public:
 
-	Layer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer_ptr,std::weak_ptr<Layer> next_layer_ptr) :
+	Layer(uint32_t layer_size, std::function<double(double)> activation_func = DEFAULT_ACTIVATION_FUNC,
+			std::weak_ptr<Layer> previous_layer_ptr = std::weak_ptr<Layer>(),
+			std::weak_ptr<Layer> next_layer_ptr = std::weak_ptr<Layer>()) :
 		layer_size_(layer_size),neurons_(layer_size),layer_type(NORMAL_LAYER),
 		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
 	{
@@ -57,6 +61,8 @@ public:
 
 	inline uint32_t get_layer_size() { return this->layer_size_; }
 	virtual inline int get_layer_type() { return this->layer_type; }
+	inline activation_func_ptr get_activation_func_ptr()	{ return &(this->activation_func_); }
+	inline VectorXd* get_neurons_ptr() { return &(this->neurons_); }
 
 	bool get_has_next();
 
@@ -68,7 +74,7 @@ public:
 	virtual inline void set_previous_layer_ptr(std::weak_ptr<Layer> previous_layer_ptr) { this->previous_layer_ptr_ = previous_layer_ptr; }
 	virtual inline void set_input_weights(std::shared_ptr<Weights> input_weight) { this->input_weights_ptr_ = input_weight; }
 	virtual inline void set_output_weights(std::shared_ptr<Weights> output_weight) { this->output_weights_ptr_ = output_weight; }
-
+	virtual inline void set_new_val_to_neurons(VectorXd &new_neurons_val) { this->neurons_ = new_neurons_val; }
 
 
 
@@ -83,7 +89,7 @@ private:
 
 public:
 
-	InputLayer(uint32_t layer_size,std::weak_ptr<Layer> next_layer);
+	InputLayer(uint32_t layer_size,std::function<double(double)> activation_func = DEFAULT_ACTIVATION_FUNC,std::weak_ptr<Layer> next_layer = std::weak_ptr<Layer>());
 
 	//---- getters ----//
 
@@ -106,7 +112,7 @@ private:
 	int layer_type;
 
 public:
-	OutputLayer(uint32_t layer_size,std::weak_ptr<Layer> previous_layer);
+	OutputLayer(uint32_t layer_size,std::function<double(double)> activation_func = Activations::None,std::weak_ptr<Layer> previous_layer = std::weak_ptr<Layer>());
 
 	//---- getters ----//
 
