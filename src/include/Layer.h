@@ -31,7 +31,7 @@ private:
 	uint32_t layer_size_;
 	VectorXd neurons_; //column vector
 	int layer_type;
-	std::function<double(double)> activation_func_;
+	activation_func activation_func_;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
 	std::weak_ptr<Layer> next_layer_ptr_;
@@ -91,7 +91,7 @@ private:
 
 public:
 
-	InputLayer(uint32_t layer_size, std::function<double(double)> activation_func = DEFAULT_ACTIVATION_FUNC,std::weak_ptr<Layer> next_layer = std::weak_ptr<Layer>());
+	InputLayer(uint32_t layer_size, std::function<double(double)> activation_func = Activations::None,std::weak_ptr<Layer> next_layer = std::weak_ptr<Layer>());
 
 	//---- getters ----//
 
@@ -114,7 +114,7 @@ private:
 	int layer_type;
 
 public:
-	OutputLayer(uint32_t layer_size,std::function<double(double)> activation_func = Activations::None,std::weak_ptr<Layer> previous_layer = std::weak_ptr<Layer>());
+	OutputLayer(uint32_t layer_size,std::function<double(double)> activation_func = DEFAULT_ACTIVATION_FUNC,std::weak_ptr<Layer> previous_layer = std::weak_ptr<Layer>());
 
 	//---- getters ----//
 	inline void set_next_layer_ptr(std::weak_ptr<Layer> next_layer_ptr) override { throw std::runtime_error("No connect next for OutpoutLayer"); }
