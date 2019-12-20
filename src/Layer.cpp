@@ -11,26 +11,27 @@ namespace ANN
 {
 //************* Layer ************//
 
+//-------- static functions ---------
 
-bool Layer::connect_next(std::weak_ptr<Layer> next_layer)
+bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer)
 {
 
 	std::shared_ptr<Layer> next_layer_inst = next_layer.lock();
+	std::shared_ptr<Layer> current_layer_inst = current_layer.lock();
 
-	if(next_layer_inst)
+	if(next_layer_inst && current_layer_inst)
 	{
-
-		this->next_layer_ptr_ = next_layer; //connect to the next layer
-		next_layer_inst->set_previous_layer_ptr(std::weak_ptr<Layer>(getptr()));
+		next_layer_inst->set_previous_layer_ptr(current_layer);
+		current_layer_inst->set_next_layer_ptr(next_layer);
 
 		// Creating weights instance
 		// rows ---> Next layer
 		// cols ---> Current Layer
 		// Wx+b where W is NxP and x is Px1 (N-Next layer dimension,P-Previous layer dimension)
-		std::shared_ptr<Weights> weights_ptr = std::make_shared<Weights>(next_layer_inst->get_layer_size(),this->get_layer_size());
+		std::shared_ptr<Weights> weights_ptr = std::make_shared<Weights>(next_layer_inst->get_layer_size(),current_layer_inst->get_layer_size());
 
 		next_layer_inst->set_input_weights(weights_ptr);//new weights are the input of next layer
-		set_output_weights(weights_ptr);//new weights are the output weights of this layer
+		current_layer_inst->set_output_weights(weights_ptr);//new weights are the output weights of this layer
 
 		return true;
 	}

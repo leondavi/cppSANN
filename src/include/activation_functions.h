@@ -4,7 +4,7 @@
 
 #define DEFAULT_ACTIVATION_FUNC Activations::ReLU
 
-typedef std::function<double(double)>* activation_func_ptr;
+typedef std::function<double(double)> activation_func;
 
 namespace Activations
 {

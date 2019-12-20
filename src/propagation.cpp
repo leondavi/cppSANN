@@ -33,9 +33,11 @@ bool ForwardPropagation::execute()
 		if(next_layer)
 		{
 			std::shared_ptr<ANN::Weights> output_weights_ptr = current_layer->get_output_weights_ptr();
-			next_layer->get_activation_func_ptr();
+
 			VectorXd Wx_val = output_weights_ptr->dot(*current_layer->get_neurons_ptr());
-			Wx_val = Wx_val + output_weights_ptr->bias_;//TODO add bias to vector
+			Wx_val = Wx_val + output_weights_ptr->get_bias()*VectorXd::Ones(Wx_val.rows());
+			VectorXd Wx_val_act = Wx_val.unaryExpr(next_layer->get_activation_func());
+			next_layer->set_new_val_to_neurons(Wx_val_act);
 		}
 	}
 
