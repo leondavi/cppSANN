@@ -133,7 +133,8 @@ inline double DELU(double x, double a = 0.5) // a should be set here
  */
 inline double DTanh(double x)
 {
-	return 1-tanh(x)*tanh(x);
+	double r = tanh(x);
+	return 1-r*r;
 }
 
 inline double None(double x)
