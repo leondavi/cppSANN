@@ -18,18 +18,22 @@ int main(int ac, char** av)
 	     7, 8, 9,
 		 10,11,12;
 	ANN::Weights new_weight(m);
-	VectorXd sample_vec(3); sample_vec << 1,2,3;
-	std::cout<<"Before: "<<*new_weight.get_weights_mat()<<std::endl;
+	VectorXd sample_vec(3); sample_vec << 2.,0,2.5;
+	VectorXd sample_vec2(3); sample_vec2 << 0,1.,0;
+
+	std::cout<<"Mse results: "<<ExtMath::mse(sample_vec,sample_vec2)<<std::endl;
+
+	//std::cout<<"Before: "<<*new_weight.get_weights_mat()<<std::endl;
 	VectorXd dprod_vec = new_weight.dot(sample_vec)/100;
 
-	std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
+	//std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
 	dprod_vec = dprod_vec.unaryExpr(&Activations::Sigmoid);
 
 
 //	std::cout<<"After: "<<*new_weight.get_weights_mat()<<std::endl;
 //	std::cout<<"sample_vec: \n"<<sample_vec<<std::endl;
-	std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
+	//std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
 
 	std::cout<<"forward propagation testing: "<<std::endl;

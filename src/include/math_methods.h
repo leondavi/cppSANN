@@ -2,6 +2,7 @@
 
 #include <eigen3/Eigen/Eigen>
 #include <random>
+#include <iostream>
 
 namespace ExtMath //extended math operations to eigen
 {
@@ -77,6 +78,16 @@ inline Eigen::VectorXd dot(Eigen::MatrixXd &W, Eigen::VectorXd &x)
 		throw std::runtime_error("[ExtMath] Error with given x and W dimensions for dot product");
 	}
 	return (W*x.asDiagonal()).rowwise().sum();
+}
+
+/**
+ * Calculating mean squared error sum{(Y_est-Y)^2}
+ */
+inline double mse(Eigen::VectorXd &Y,Eigen::VectorXd &Y_est)
+{
+	Eigen::VectorXd Y_tot = Y_est-Y;
+	std::cout<<"S: "<<Y.array().size()<<"\n";
+	return ((Y_tot.array()*Y_tot.array()).sum())/Y.array().size();
 }
 
 }

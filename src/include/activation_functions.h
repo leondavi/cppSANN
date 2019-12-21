@@ -8,8 +8,6 @@ typedef std::function<double(double)> t_activation_func;
 
 namespace Activations
 {
-
-
 /**
  * Sigmoid
  * Pros:
@@ -85,5 +83,63 @@ inline double None(double x)
 	return x;
 }
 
+} //Activations end
+
+//=================================================================================================================//
+
+namespace Derivatives
+{
+
+/**
+ * DSigmoid
+ * Derivative of sigmoid function
+ */
+inline double DSigmoid(double x)
+{
+	return Activations::Sigmoid(x)*(1-Activations::Sigmoid(x));
+}
+
+/**
+ * Derivative of Rectified Linear Unit
+ */
+inline double DReLU(double x)
+{
+	return x>0 ? 1 : 0;
+}
+
+/**
+ * Derivative of leaky ReLU
+ * Note: Must be used with lambda function that envelope this function and set alpha param
+ * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
+ */
+inline double DLeakyReLU(double x,double a = 0.5)
+{
+
+
+	return x > 0 ? 1 : a;
+}
+
+/**
+ * Derivative of ELU
+ */
+inline double DELU(double x, double a = 0.5) // a should be set here
+{
+	return x > 0 ? 1 : a*exp(x);
+}
+
+/**
+ * Derivative of hiperbolic tangent
+ *
+ */
+inline double DTanh(double x)
+{
+	return 1-tanh(x)*tanh(x);
+}
+
+inline double None(double x)
+{
+	return x;
+}
 
 }
+

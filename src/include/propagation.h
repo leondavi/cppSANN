@@ -42,10 +42,19 @@ class BackwardPropagation
 
 private:
 
+	std::shared_ptr<OutputLayer> output_layer_ptr_;
+	double learning_rate_;
 
 public:
 
+	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr, double learning_rate) :
+		output_layer_ptr_(output_layer_ptr),
+		learning_rate_(learning_rate)
+	{
 
+	}
+
+	bool execute();
 };
 
 }//end of namespace Propagation
