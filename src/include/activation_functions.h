@@ -4,7 +4,6 @@
 
 #define DEFAULT_ACTIVATION_FUNC Activations::ReLU
 
-
 typedef std::function<double(double)> t_activation_func;
 
 namespace Activations
@@ -44,7 +43,8 @@ inline double ReLU(double x)
 }
 
 /**
- * Note: argument a should be set here or use lambda function to envelope it
+ * Note: Must be use with lambda function that envelope this function and set alpha param
+ * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
  */
 inline double LeakyReLU(double x,double a = 0.5)
 {
