@@ -6,13 +6,14 @@
 
 typedef std::function<double(double)> t_activation_func;
 
-class Activation
-{
-//TODO
-};
 
 namespace Activations
 {
+
+class ActivationFunction
+{
+//TODO
+};
 /**
  * Sigmoid
  * Pros:
