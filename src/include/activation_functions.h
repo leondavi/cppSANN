@@ -43,7 +43,7 @@ inline double ReLU(double x)
 }
 
 /**
- * Note: Must be use with lambda function that envelope this function and set alpha param
+ * Note: Must be used with lambda function that envelope this function and set alpha param
  * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
  */
 inline double LeakyReLU(double x,double a = 0.5)
