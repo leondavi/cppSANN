@@ -13,6 +13,7 @@ namespace ANN
 
 //-------- static functions ---------
 
+
 bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer)
 {
 
@@ -36,6 +37,35 @@ bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Laye
 		return true;
 	}
 	return false;
+}
+
+
+bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer,std::shared_ptr<Weights> weights_ptr)
+{
+	std::shared_ptr<Layer> next_layer_inst = next_layer.lock();
+	std::shared_ptr<Layer> current_layer_inst = current_layer.lock();
+
+	if(next_layer_inst && current_layer_inst)
+	{
+		bool weight_mat_size_correct = (weights_ptr->get_weights_mat()->rows() == next_layer_inst->get_layer_size()) &&
+											weights_ptr->get_weights_mat()->cols() == current_layer_inst->get_layer_size();
+
+		if(!weight_mat_size_correct)
+		{
+			throw std::runtime_error("Wrong weights matrix - can't connect layers");
+		}
+
+		next_layer_inst->set_previous_layer_ptr(current_layer);
+		current_layer_inst->set_next_layer_ptr(next_layer);
+
+
+		next_layer_inst->set_input_weights(weights_ptr);//new weights are the input of next layer
+		current_layer_inst->set_output_weights(weights_ptr);//new weights are the output weights of this layer
+
+		return true;
+	}
+	return false;
+
 }
 
 //-------- getters ----------//
