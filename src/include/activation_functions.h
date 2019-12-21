@@ -2,6 +2,10 @@
 
 #include <eigen3/Eigen/Eigen>
 
+#define DEFAULT_ACTIVATION_FUNC Activations::ReLU
+
+typedef std::function<double(double)> t_activation_func;
+
 namespace Activations
 {
 
@@ -16,7 +20,7 @@ namespace Activations
 	- Sigmoid outputs are not zero-centered
 	- exp() is a bit compute expensive
  */
-double Sigmoid(double x)
+inline double Sigmoid(double x)
 {
 	return 1./(1.+exp(-x));
 }
@@ -33,15 +37,16 @@ double Sigmoid(double x)
 	Cons:
 	- Not zero-centered output
  */
-double ReLU(double x)
+inline double ReLU(double x)
 {
 	return std::max(0.,x);
 }
 
 /**
- * Note: argument a should be set here or use lambda function to envelope it
+ * Note: Must be use with lambda function that envelope this function and set alpha param
+ * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
  */
-double LeakyReLU(double x,double a = 0.5)
+inline double LeakyReLU(double x,double a = 0.5)
 {
 	return std::max(a*x,x);
 }
@@ -55,7 +60,7 @@ double LeakyReLU(double x,double a = 0.5)
 
 	Note: argument a should be set here or use lambda function to envelope it
  */
-double ELU(double x, double a = 0.5) // a should be set here
+inline double ELU(double x, double a = 0.5) // a should be set here
 {
 	return x>0 ? x : a*(exp(x)-1);
 }
@@ -70,9 +75,14 @@ double ELU(double x, double a = 0.5) // a should be set here
  * 		- Kills gradients when saturated.
  *
  */
-double Tanh(double x)
+inline double Tanh(double x)
 {
 	return tanh(x);
+}
+
+inline double None(double x)
+{
+	return x;
 }
 
 
