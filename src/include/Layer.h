@@ -31,7 +31,7 @@ private:
 	uint32_t layer_size_;
 	VectorXd neurons_; //column vector
 	int layer_type;
-	activation_func activation_func_;
+	t_activation_func activation_func_;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
 	std::weak_ptr<Layer> next_layer_ptr_;
@@ -43,10 +43,11 @@ private:
 
 public:
 
-	Layer(uint32_t layer_size, std::function<double(double)> activation_func = DEFAULT_ACTIVATION_FUNC,
+	Layer(uint32_t layer_size, t_activation_func activation_func = DEFAULT_ACTIVATION_FUNC,
 			std::weak_ptr<Layer> previous_layer_ptr = std::weak_ptr<Layer>(),
 			std::weak_ptr<Layer> next_layer_ptr = std::weak_ptr<Layer>()) :
 		layer_size_(layer_size),neurons_(layer_size),layer_type(NORMAL_LAYER),
+		activation_func_(activation_func),
 		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
 	{
 
@@ -61,7 +62,7 @@ public:
 
 	inline uint32_t get_layer_size() { return this->layer_size_; }
 	virtual inline int get_layer_type() { return this->layer_type; }
-	inline activation_func get_activation_func()	{ return this->activation_func_; }
+	inline t_activation_func get_activation_func()	{ return this->activation_func_; }
 	inline VectorXd* get_neurons_ptr() { return &(this->neurons_); }
 
 	bool get_has_next();
