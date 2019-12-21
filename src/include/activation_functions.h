@@ -114,8 +114,6 @@ inline double DReLU(double x)
  */
 inline double DLeakyReLU(double x,double a = 0.5)
 {
-
-
 	return x > 0 ? 1 : a;
 }
 
