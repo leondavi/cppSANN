@@ -80,6 +80,16 @@ bool Layer::get_has_next()
 	return false;
 }
 
+bool Layer::get_has_previous()
+{
+	std::shared_ptr<Layer> previous_layer_inst = this->previous_layer_ptr_.lock();
+	if(previous_layer_inst)
+	{
+		return true;
+	}
+	return false;
+}
+
 //********* InputLayer *************//
 
 InputLayer::InputLayer(uint32_t layer_size,std::function<double(double)> activation_func,std::weak_ptr<Layer> next_layer) :

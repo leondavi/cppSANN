@@ -66,6 +66,7 @@ public:
 	inline VectorXd* get_neurons_ptr() { return &(this->neurons_); }
 
 	bool get_has_next();
+	bool get_has_previous();
 
 	//---- setters ----//
 
