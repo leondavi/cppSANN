@@ -47,6 +47,7 @@ int main(int ac, char** av)
 	ANN::Propagation::ForwardPropagation fp(input_layer);
 
 	fp.execute();
+	std::cout<<"output neurons result: \n"<<*output_layer->get_neurons_ptr()<<std::endl;
 
 	return 0;
 
