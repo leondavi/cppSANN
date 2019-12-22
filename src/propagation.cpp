@@ -41,7 +41,8 @@ bool ForwardPropagation::execute()
 		{
 			std::shared_ptr<ANN::Weights> output_weights_ptr = current_layer->get_output_weights_ptr();
 
-			if(DEBUG_FLAG) {
+			if(DEBUG_FLAG)
+			{
 			std::cout<<"Weights: \n"<<*output_weights_ptr->get_weights_mat()<<std::endl;
 			std::cout<<"Neurons: \n"<<*current_layer->get_neurons_ptr()<<std::endl;
 			std::cout<<"Bias: \n"<<output_weights_ptr->get_bias()<<std::endl;
@@ -50,25 +51,29 @@ bool ForwardPropagation::execute()
 
 			VectorXd Wx_val = output_weights_ptr->dot(*current_layer->get_neurons_ptr());
 
-			if(DEBUG_FLAG) {
+			if(DEBUG_FLAG)
+			{
 			std::cout<<"Dot result Wx: \n"<<Wx_val<<std::endl;
 			}
 
 			Wx_val = Wx_val + output_weights_ptr->get_bias()*VectorXd::Ones(Wx_val.rows());
 
-			if(DEBUG_FLAG) {
+			if(DEBUG_FLAG)
+			{
 			std::cout<<"Result with bias Wx+b: \n"<<Wx_val<<std::endl;
 			}
 
 			VectorXd Wx_val_act = Wx_val.unaryExpr(next_layer->get_activation_func());
 
-			if(DEBUG_FLAG) {
+			if(DEBUG_FLAG)
+			{
 			std::cout<<"f(Wx+b): \n"<<Wx_val_act<<std::endl;
 			}
 
 			next_layer->set_new_val_to_neurons(Wx_val_act);
 
-			if(DEBUG_FLAG) {
+			if(DEBUG_FLAG)
+			{
 			std::cout<<"===================================\n"<<std::endl;
 			}
 
