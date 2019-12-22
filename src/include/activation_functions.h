@@ -13,12 +13,12 @@ class ActivationFunction
 {
 public:
 	virtual double function(double x) = 0;
-	virtual double function_derivative(double x) = 0;
+	virtual double function_derivative(double x) = 0; //first derivative of function
 
 	virtual ~ActivationFunction() {}
 
 	virtual t_activation_func get_func() { return [this](double x){return this->function(x);}; }
-	virtual t_activation_func get_Dfunc() { return [this](double x){return this->function_derivative(x);}; }
+	virtual t_activation_func get_Dfunc() { return [this](double x){return this->function_derivative(x);}; } //first derivative of function
 
 };
 
