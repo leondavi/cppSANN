@@ -174,19 +174,6 @@ public:
 	}
 };
 
-/**
- * Move all the output nodes values to the range [0,1]
- * and the sum of all output node values equals to 1.
- * This function can be applied to layer's neurons for example.
- * Don't pass this function as activation function of layer.
- * It can be applied to layer's neurons only by set_new_val_to_neurons function
- */
-inline VectorXd softmax(VectorXd y)
-{
-	VectorXd y_exp = y.array().exp();
-	double sum_y_exp = y_exp.sum();
-	return y_exp.array()/sum_y_exp;
-}
 
 typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
 #define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::ReLU>()

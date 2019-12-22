@@ -19,10 +19,10 @@ int main(int ac, char** av)
 	     7, 8, 9,
 		 10,11,12;
 	ANN::Weights new_weight(m);
-	LossFunctions::LogLoss lgloss;
-	VectorXd sample_vec(4),sample_vec2(4); sample_vec<<1,1,0,0; sample_vec2 << 0.00003,0.1,0.01,0.90;
+	LossFunctions::CategoricalCrossEntropyLoss lgloss;
+	VectorXd sample_vec(4),sample_vec2(4); sample_vec<<1,1,0,0; sample_vec2 << 0,1,0,1;
 
-	std::cout<<"Softmax: \n"<<Activations::softmax(sample_vec)<<std::endl;
+	std::cout<<"Softmax: \n"<<Normalization::softmax(sample_vec)<<std::endl;
 	std::cout<<"logloss: \n"<<lgloss.func(sample_vec,sample_vec2)<<std::endl;
 	std::cout<<"Mse results: "<<ExtMath::mse(sample_vec,sample_vec2)<<std::endl;
 
