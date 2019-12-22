@@ -17,6 +17,7 @@
 
 
 using namespace Eigen;
+using namespace Activations;
 
 namespace ANN
 {

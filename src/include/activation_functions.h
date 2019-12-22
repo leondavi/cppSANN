@@ -2,11 +2,12 @@
 
 #include <eigen3/Eigen/Eigen>
 
-typedef std::function<double(double)> t_activation_func;
 
 
 namespace Activations
 {
+
+typedef std::function<double(double)> t_activation_func;
 
 class ActivationFunction
 {
@@ -20,7 +21,6 @@ public:
 	virtual t_activation_func get_Dfunc() { return [this](double x){return this->function_derivative(x);}; }
 
 };
-
 
 
 /**
@@ -101,6 +101,65 @@ public:
 
 };
 
+/**
+ * Exponential Linear Units
+ * Pros:
+	- All benefits of ReLU
+	- Closer to zero mean outputs
+	- Negative saturation regime compared with leaky ReLU adds some robustness to noise
+
+	Note: argument a should be set here or use lambda function to envelope it
+ */
+
+class ELU : public ActivationFunction
+{
+
+	double a_; //alpha of leaky relue
+
+public:
+
+	inline double function(double x)
+	{
+		return x>0 ? x : a_*(exp(x)-1);
+	}
+
+	inline double function_derivative(double x)
+	{
+		return x > 0 ? 1 : a_*exp(x);
+	}
+
+	ELU(double a = 0.1) : a_(a) {};
+};
+
+/**
+ * Tanh
+ *
+ * Pros:
+ * 		- Squashes numbers to range [-1,1]
+ * 		- Zero centered
+ * Cons:
+ * 		- Kills gradients when saturated.
+ *
+ */
+class Tanh : public ActivationFunction
+{
+public:
+
+	inline double function(double x)
+	{
+		return tanh(x);
+	}
+
+	inline double function_derivative(double x)
+	{
+		double r = tanh(x);
+		return 1-r*r;
+	}
+};
+
+/**
+ * Doesn't impact anything - Mainly for debug or layers without activation function such as input layer
+ */
 class None : public ActivationFunction
 {
 public:
@@ -115,73 +174,10 @@ public:
 	}
 };
 
-/**
- * Exponential Linear Units
- * Pros:
-	- All benefits of ReLU
-	- Closer to zero mean outputs
-	- Negative saturation regime compared with leaky ReLU adds some robustness to noise
-
-	Note: argument a should be set here or use lambda function to envelope it
- */
-inline double ELU(double x, double a = 0.5) // a should be set here
-{
-	return x>0 ? x : a*(exp(x)-1);
-}
-
-/**
- * Tanh
- *
- * Pros:
- * 		- Squashes numbers to range [-1,1]
- * 		- Zero centered
- * Cons:
- * 		- Kills gradients when saturated.
- *
- */
-inline double Tanh(double x)
-{
-	return tanh(x);
-}
-
+typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
+#define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::ReLU>()
 
 } //Activations end
 
-//=================================================================================================================//
 
-namespace Derivatives
-{
-
-/**
- * Derivative of leaky ReLU
- * Note: Must be used with lambda function that envelope this function and set alpha param
- * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
- */
-inline double DLeakyReLU(double x,double a = 0.5)
-{
-	return x > 0 ? 1 : a;
-}
-
-/**
- * Derivative of ELU
- */
-inline double DELU(double x, double a = 0.5) // a should be set here
-{
-	return x > 0 ? 1 : a*exp(x);
-}
-
-/**
- * Derivative of hiperbolic tangent
- *
- */
-inline double DTanh(double x)
-{
-	double r = tanh(x);
-	return 1-r*r;
-}
-
-}
-
-typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
-#define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::ReLU>()
 
