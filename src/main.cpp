@@ -20,7 +20,7 @@ int main(int ac, char** av)
 		 10,11,12;
 	ANN::Weights new_weight(m);
 	LossFunctions::CategoricalCrossEntropyLoss lgloss;
-	VectorXd sample_vec(4),sample_vec2(4); sample_vec<<1,1,0,0; sample_vec2 << 0,1,0,1;
+	VectorXd sample_vec(3),sample_vec2(3); sample_vec<<1,1,0; sample_vec2 << 0,1,0;
 
 	std::cout<<"Softmax: \n"<<Normalization::softmax(sample_vec)<<std::endl;
 	std::cout<<"logloss: \n"<<lgloss.func(sample_vec,sample_vec2)<<std::endl;
