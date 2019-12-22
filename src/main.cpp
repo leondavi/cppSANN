@@ -4,6 +4,7 @@
 #include "include/Layer.h"
 #include "include/activation_functions.h"
 #include "include/propagation.h"
+#include "include/loss_functions.h"
 
 int main(int ac, char** av);
 /**
@@ -18,9 +19,11 @@ int main(int ac, char** av)
 	     7, 8, 9,
 		 10,11,12;
 	ANN::Weights new_weight(m);
-	VectorXd sample_vec(3); sample_vec << 2.,0,2.5;
-	VectorXd sample_vec2(3); sample_vec2 << 0,1.,0;
+	LossFunctions::LogLoss lgloss;
+	VectorXd sample_vec(4),sample_vec2(4); sample_vec<<1,1,0,0; sample_vec2 << 0.00003,0.1,0.01,0.90;
 
+	std::cout<<"Softmax: \n"<<Activations::softmax(sample_vec)<<std::endl;
+	std::cout<<"logloss: \n"<<lgloss.func(sample_vec,sample_vec2)<<std::endl;
 	std::cout<<"Mse results: "<<ExtMath::mse(sample_vec,sample_vec2)<<std::endl;
 
 	//std::cout<<"Before: "<<*new_weight.get_weights_mat()<<std::endl;

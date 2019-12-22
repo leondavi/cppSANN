@@ -174,6 +174,17 @@ public:
 	}
 };
 
+/**
+ * Move all the output nodes values to the range [0,1]
+ * and the sum of all output node values equals to 1.
+ */
+inline VectorXd softmax(VectorXd y)
+{
+	VectorXd y_exp = y.array().exp();
+	double sum_y_exp = y_exp.sum();
+	return y_exp.array()/sum_y_exp;
+}
+
 typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
 #define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::ReLU>()
 

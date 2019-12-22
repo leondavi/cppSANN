@@ -43,13 +43,13 @@ class BackwardPropagation
 private:
 
 	std::shared_ptr<OutputLayer> output_layer_ptr_;
-	double learning_rate_;
+	double lr_;//learning rate
 
 public:
 
 	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr, double learning_rate) :
 		output_layer_ptr_(output_layer_ptr),
-		learning_rate_(learning_rate)
+		lr_(learning_rate)
 	{
 
 	}
