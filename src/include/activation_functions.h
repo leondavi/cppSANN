@@ -2,8 +2,6 @@
 
 #include <eigen3/Eigen/Eigen>
 
-#define DEFAULT_ACTIVATION_FUNC Activations::ReLU
-
 typedef std::function<double(double)> t_activation_func;
 
 
@@ -12,8 +10,19 @@ namespace Activations
 
 class ActivationFunction
 {
-//TODO
+public:
+	virtual double function(double x) = 0;
+	virtual double function_derivative(double x) = 0;
+
+	virtual ~ActivationFunction() {}
+
+	virtual t_activation_func get_func() { return [this](double x){return this->function(x);}; }
+	virtual t_activation_func get_Dfunc() { return [this](double x){return this->function_derivative(x);}; }
+
 };
+
+
+
 /**
  * Sigmoid
  * Pros:
@@ -24,10 +33,21 @@ class ActivationFunction
 	- Sigmoid outputs are not zero-centered
 	- exp() is a bit compute expensive
  */
-inline double Sigmoid(double x)
+class Sigmoid : public ActivationFunction
 {
-	return 1./(1.+exp(-x));
-}
+
+public:
+	inline double function(double x)
+	{
+		return 1./(1.+exp(-x));
+	}
+
+	inline double function_derivative(double x)
+	{
+		double sigmoid_x = function(x);
+		return sigmoid_x*(1-sigmoid_x);
+	}
+};
 
 /**
  * Rectified Linear Unit
@@ -41,19 +61,59 @@ inline double Sigmoid(double x)
 	Cons:
 	- Not zero-centered output
  */
-inline double ReLU(double x)
+class ReLU : public ActivationFunction
 {
-	return std::max(0.,x);
-}
+public:
+	inline double function(double x)
+	{
+		return std::max(0.,x);
+	}
+
+	inline double function_derivative(double x)
+	{
+		return x>0 ? 1 : 0;
+	}
+};
+
+
 
 /**
  * Note: Must be used with lambda function that envelope this function and set alpha param
  * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
  */
-inline double LeakyReLU(double x,double a = 0.5)
+class LeakyReLU : public ActivationFunction
 {
-	return std::max(a*x,x);
-}
+
+	double a_; //alpha of leaky relue
+
+public:
+	inline double function(double x)
+	{
+		return std::max(a_*x,x);
+	}
+
+	inline double function_derivative(double x)
+	{
+		return x > 0 ? 1 : a_;
+	}
+
+	LeakyReLU(double a = 0.1) : a_(a) {};
+
+};
+
+class None : public ActivationFunction
+{
+public:
+	inline double function(double x)
+	{
+		return x;
+	}
+
+	inline double function_derivative(double x)
+	{
+		return x;
+	}
+};
 
 /**
  * Exponential Linear Units
@@ -84,10 +144,6 @@ inline double Tanh(double x)
 	return tanh(x);
 }
 
-inline double None(double x)
-{
-	return x;
-}
 
 } //Activations end
 
@@ -95,23 +151,6 @@ inline double None(double x)
 
 namespace Derivatives
 {
-
-/**
- * DSigmoid
- * Derivative of sigmoid function
- */
-inline double DSigmoid(double x)
-{
-	return Activations::Sigmoid(x)*(1-Activations::Sigmoid(x));
-}
-
-/**
- * Derivative of Rectified Linear Unit
- */
-inline double DReLU(double x)
-{
-	return x>0 ? 1 : 0;
-}
 
 /**
  * Derivative of leaky ReLU
@@ -141,10 +180,8 @@ inline double DTanh(double x)
 	return 1-r*r;
 }
 
-inline double None(double x)
-{
-	return x;
 }
 
-}
+typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
+#define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::ReLU>()
 

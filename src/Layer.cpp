@@ -92,7 +92,7 @@ bool Layer::get_has_previous()
 
 //********* InputLayer *************//
 
-InputLayer::InputLayer(uint32_t layer_size,std::function<double(double)> activation_func,std::weak_ptr<Layer> next_layer) :
+InputLayer::InputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,std::weak_ptr<Layer> next_layer) :
 						Layer(layer_size,activation_func,std::weak_ptr<Layer>(),next_layer),layer_type(INPUT_LAYER)
 {
 
@@ -102,7 +102,7 @@ InputLayer::InputLayer(uint32_t layer_size,std::function<double(double)> activat
 
 
 //********* OutputLayer ***********//
-OutputLayer::OutputLayer(uint32_t layer_size,std::function<double(double)> activation_func,std::weak_ptr<Layer> previous_layer) :
+OutputLayer::OutputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,std::weak_ptr<Layer> previous_layer) :
 						Layer(layer_size,activation_func,std::weak_ptr<Layer>(),previous_layer),layer_type(OUTPUT_LAYER)
 {
 

@@ -24,16 +24,18 @@ int main(int ac, char** av)
 	std::cout<<"Mse results: "<<ExtMath::mse(sample_vec,sample_vec2)<<std::endl;
 
 	//std::cout<<"Before: "<<*new_weight.get_weights_mat()<<std::endl;
-	VectorXd dprod_vec = new_weight.dot(sample_vec)/100;
+	VectorXd dprod_vec = new_weight.dot(sample_vec)*100;
+	std::cout<<"before dprod vec: \n"<<dprod_vec<<std::endl;
 
 	//std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
-	dprod_vec = dprod_vec.unaryExpr(&Activations::Sigmoid);
+	Activations::Sigmoid sigmoid;
+	dprod_vec = dprod_vec.unaryExpr(sigmoid.get_func());
 
 
 //	std::cout<<"After: "<<*new_weight.get_weights_mat()<<std::endl;
 //	std::cout<<"sample_vec: \n"<<sample_vec<<std::endl;
-	//std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
+	std::cout<<"dprod vec: \n"<<dprod_vec<<std::endl;
 
 
 	std::cout<<"forward propagation testing: "<<std::endl;
