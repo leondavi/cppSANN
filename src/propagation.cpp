@@ -88,6 +88,34 @@ bool ForwardPropagation::execute()
 	return true;
 }
 
+/************************************/
+/* 		BackwardPropagation 		*/
+/************************************/
+
+bool BackwardPropagation::execute(VectorXd Y)
+{
+	std::shared_ptr<Layer> current_layer;
+	std::shared_ptr<Layer> previous_layer;
+
+	current_layer = this->output_layer_ptr_;
+
+	double loss_val = this->loss_func_->func(*(current_layer->get_neurons_ptr()),Y);
+
+	while((current_layer->get_layer_type() != INPUT_LAYER) && current_layer->get_has_previous())
+	{
+		previous_layer = current_layer->get_previous_layer_ptr().lock();
+		if(previous_layer)
+		{
+
+
+			current_layer = previous_layer;
+		}
+	}
+
+	return true;
+}
+
+
 }
 
 }

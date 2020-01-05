@@ -66,9 +66,9 @@ public:
 	inline t_activation_func get_activation_func()	{ return this->activation_func_ptr_->get_func(); }
 	inline VectorXd* get_neurons_ptr() { return &(this->neurons_); }
 
+
 	bool get_has_next();
 	bool get_has_previous();
-
 	//---- setters ----//
 
 	virtual inline void set_next_layer_ptr(std::weak_ptr<Layer> next_layer_ptr) { this->next_layer_ptr_ = next_layer_ptr; }

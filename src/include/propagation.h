@@ -9,6 +9,7 @@
 #define SRC_INCLUDE_PROPAGATION_H_
 
 #include <memory>
+#include "loss_functions.h"
 #include "Layer.h"
 
 namespace ANN
@@ -44,17 +45,21 @@ private:
 
 	std::shared_ptr<OutputLayer> output_layer_ptr_;
 	double lr_;//learning rate
+	LossFunctionPtr loss_func_;
 
 public:
 
-	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr, double learning_rate) :
+	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr,
+						double learning_rate,
+						LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
 		output_layer_ptr_(output_layer_ptr),
-		lr_(learning_rate)
+		lr_(learning_rate),
+		loss_func_(loss_func)
 	{
 
 	}
 
-	bool execute();
+	bool execute(VectorXd Y);
 };
 
 }//end of namespace Propagation
