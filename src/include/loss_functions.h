@@ -15,50 +15,35 @@ namespace LossFunctions
 
 		virtual ~Loss() {};
 
-		virtual double func(VectorXd &y, VectorXd &y_pred) = 0;
+		virtual VectorXd func(VectorXd &y, VectorXd &y_pred) = 0;
+		virtual VectorXd derivative(VectorXd &y, VectorXd &y_pred) = 0;
+
 	};
 
-
-
-	/**
-	 * CategoricalCrossEntropyLoss
-	 *
-	 * LogLoss(y,softmax(Y_pred))
-	 */
-	class CategoricalCrossEntropyLoss : public Loss
-	{
-		/**
-		 * This is the LogLoss function.
-		 * It gives a penately for wrong binary classifications.
-		 * It consists out of two loss fucntions for positive class Y=1 and negative class Y=0:
-		 * Positive class: Loss = -log(Y_pred)
-		 * Negative class: Loss = -log(1-Y_pred)
-		 */
-		class LogLoss
-		{
-		public:
-			inline VectorXd func(VectorXd &y, VectorXd &y_pred)
-			{
-				return y.array()*y_pred.array().log()*(-1)+(1-y.array())*(1-y_pred.array()).log()*(-1);
-			}
-		};
-
-	public:
-			inline double func(VectorXd &y, VectorXd &y_pred) override
-			{
-				LogLoss logloss;
-				VectorXd y_pred_softmax = Normalization::softmax(y_pred);
-				return logloss.func(y,y_pred_softmax).sum();
-			}
-	};
 
 	class MSELoss : public Loss
 	{
 	public:
-		inline double func(VectorXd &y, VectorXd &y_pred) override
+		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
 		{
-			return ExtMath::mse(y,y_pred);
+
+			std::cout<<"y: "<<y<<std::endl;
+			std::cout<<"y_pred: "<<y_pred<<std::endl;
+
+			VectorXd tmp = y-y_pred;
+			std::cout<<"tmp: "<<tmp<<std::endl;
+
+			tmp = tmp.array().pow(2);
+			std::cout<<"tmp after pow: "<<tmp<<std::endl;
+
+			return tmp;
 		}
+		inline VectorXd derivative(VectorXd &y, VectorXd &y_pred) override
+		{
+			return y_pred - y;
+		}
+
+
 
 	};
 

@@ -46,6 +46,7 @@ private:
 	std::shared_ptr<OutputLayer> output_layer_ptr_;
 	double lr_;//learning rate
 	LossFunctionPtr loss_func_;
+	double error_;
 
 public:
 
@@ -54,12 +55,15 @@ public:
 						LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
 		output_layer_ptr_(output_layer_ptr),
 		lr_(learning_rate),
-		loss_func_(loss_func)
+		loss_func_(loss_func),
+		error_(0)
 	{
 
 	}
 
 	bool execute(VectorXd Y);
+
+	inline double get_error_val() {return this->error_;}
 };
 
 }//end of namespace Propagation

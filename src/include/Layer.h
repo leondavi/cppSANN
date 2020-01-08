@@ -63,7 +63,7 @@ public:
 
 	inline uint32_t get_layer_size() { return this->layer_size_; }
 	virtual inline int get_layer_type() { return this->layer_type; }
-	inline t_activation_func get_activation_func()	{ return this->activation_func_ptr_->get_func(); }
+	inline ActivationFunctionPtr get_activation_func_ptr()	{ return this->activation_func_ptr_; }
 	inline VectorXd* get_neurons_ptr() { return &(this->neurons_); }
 
 

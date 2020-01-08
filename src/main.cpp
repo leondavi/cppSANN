@@ -19,11 +19,16 @@ int main(int ac, char** av)
 	     7, 8, 9,
 		 10,11,12;
 	ANN::Weights new_weight(m);
-	LossFunctions::CategoricalCrossEntropyLoss lgloss;
-	VectorXd sample_vec(3),sample_vec2(3); sample_vec<<1,1,0; sample_vec2 << 0,1,0;
+	VectorXd sample_vec(3),sample_vec2(3); sample_vec<<1,2,3; sample_vec2 << 2,4,6;
+
+
+	std::cout<<"First row: "<< m.row(0) <<"\n";
+
+	LossFunctions::MSELoss mse_loss;
+	mse_loss.func(sample_vec,sample_vec2);
+
 
 	std::cout<<"Softmax: \n"<<Normalization::softmax(sample_vec)<<std::endl;
-	std::cout<<"logloss: \n"<<lgloss.func(sample_vec,sample_vec2)<<std::endl;
 	std::cout<<"Mse results: "<<ExtMath::mse(sample_vec,sample_vec2)<<std::endl;
 
 	//std::cout<<"Before: "<<*new_weight.get_weights_mat()<<std::endl;
@@ -55,7 +60,13 @@ int main(int ac, char** av)
 
 	ANN::Propagation::ForwardPropagation fp(input_layer);
 
+	ANN::Propagation::BackwardPropagation bp(output_layer,0.01);
+
+	VectorXd labels(4); labels << 1,0,0,1;
+
 	fp.execute();
+	bp.execute(labels);
+
 	std::cout<<"output neurons result: \n"<<*output_layer->get_neurons_ptr()<<std::endl;
 
 	return 0;
