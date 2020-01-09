@@ -103,44 +103,54 @@ bool BackwardPropagation::execute(VectorXd Y)
 
 	error_ = this->loss_func_->func(*(current_layer->get_neurons_ptr()),Y).sum();
 
-	VectorXd dEtot_dout = this->loss_func_->derivative(*(current_layer->get_neurons_ptr()),Y);
 
-	VectorXd dout_dnet = current_layer->get_neurons_ptr()->unaryExpr(current_layer->get_activation_func_ptr()->get_Dfunc());
-
-	previous_layer = current_layer->get_previous_layer_ptr().lock();
-
-
-	std::cout<<"current neurons:\n"<<*(current_layer->get_neurons_ptr())<<std::endl;
-	std::cout<<"dEtot_dout:\n"<<dEtot_dout<<std::endl;
-	std::cout<<"dout_dnet:\n"<<dout_dnet<<std::endl;
-
-
-	if(previous_layer)
+	while((current_layer->get_layer_type() != INPUT_LAYER) && current_layer->get_has_previous())
 	{
-		std::cout<<"Previous Neurons: "<<*(previous_layer->get_neurons_ptr())<<std::endl;
 
-	MatrixXd weights_diff(current_layer->get_input_weights_ptr()->get_weights_mat()->rows(),
-						  current_layer->get_input_weights_ptr()->get_weights_mat()->cols());
+		VectorXd dEtot_dout = this->loss_func_->derivative(*(current_layer->get_neurons_ptr()),Y);
 
 
-	for (uint32_t row = 0; row < weights_diff.rows(); row++)
-	{
-		double etot_dout_sc = dEtot_dout(row);
-		double dout_dnet_sc = dout_dnet(row);
-		weights_diff.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc*this->lr_;
-	}
+		VectorXd dout_dnet = current_layer->get_neurons_ptr()->unaryExpr(current_layer->get_activation_func_ptr()->get_Dfunc());
 
-	std::cout<<"weights diff: "<<weights_diff<<std::endl;
-	std::cout<<"weights_mat: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat())<<std::endl;
+		previous_layer = current_layer->get_previous_layer_ptr().lock();
 
 
-	current_layer->get_input_weights_ptr()->subtract_weights(weights_diff);
+		std::cout<<"current neurons:\n"<<*(current_layer->get_neurons_ptr())<<std::endl;
+		std::cout<<"dEtot_dout:\n"<<dEtot_dout<<std::endl;
+		std::cout<<"dout_dnet:\n"<<dout_dnet<<std::endl;
 
-	std::cout<<"weights_mat after diff: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat())<<std::endl;
+
+		if(previous_layer)
+		{
+			std::cout<<"Previous Neurons: "<<*(previous_layer->get_neurons_ptr())<<std::endl;
+
+			MatrixXd weights_diff(current_layer->get_input_weights_ptr()->get_weights_mat()->rows(),
+								  current_layer->get_input_weights_ptr()->get_weights_mat()->cols());
 
 
-		current_layer = previous_layer;
-	}
+			double bias_diff;
+
+			for (uint32_t row = 0; row < weights_diff.rows(); row++)
+			{
+				double etot_dout_sc = dEtot_dout(row);
+				double dout_dnet_sc = dout_dnet(row);
+				weights_diff.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc*this->lr_;
+				bias_diff += this->lr_*etot_dout_sc*dout_dnet_sc;
+			}
+
+			std::cout<<"weights diff: "<<weights_diff<<std::endl;
+			std::cout<<"weights_mat: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat())<<std::endl;
+
+
+			current_layer->get_input_weights_ptr()->subtract_weights(weights_diff);
+			current_layer->get_input_weights_ptr()->subtract_bias(bias_diff);
+
+			std::cout<<"weights_mat after diff: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat())<<std::endl;
+
+
+			current_layer = previous_layer;
+		}
+	}//end while
 //
 //	while((current_layer->get_layer_type() != INPUT_LAYER) && current_layer->get_has_previous())
 //	{

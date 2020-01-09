@@ -66,6 +66,10 @@ int main(int ac, char** av)
 
 	fp.execute();
 	bp.execute(labels);
+	fp.execute();
+	bp.execute(labels);
+	fp.execute();
+	bp.execute(labels);
 
 	std::cout<<"output neurons result: \n"<<*output_layer->get_neurons_ptr()<<std::endl;
 
