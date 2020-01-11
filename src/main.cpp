@@ -51,27 +51,34 @@ int main(int ac, char** av)
 	VectorXd data_vec(8); data_vec << 1,2,3,4,3,2,1,0;
 	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8);
 	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6);
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6);
 	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4);
 
 	input_layer->set_input_data(data_vec);
 
 	ANN::Layer::connect_layers(input_layer,hidden_layer);
-	ANN::Layer::connect_layers(hidden_layer,output_layer);
+	ANN::Layer::connect_layers(hidden_layer,hidden_layer_2);
+	ANN::Layer::connect_layers(hidden_layer_2,output_layer);
 
 	ANN::Propagation::ForwardPropagation fp(input_layer);
 
 	ANN::Propagation::BackwardPropagation bp(output_layer,0.01);
 
-	VectorXd labels(4); labels << 1,0,0,1;
+	VectorXd labels(4); labels << 0,1,1,0;
 
+	for (int i=0; i<14000; i++)
+	{
 	fp.execute();
 	bp.execute(labels);
-	fp.execute();
-	bp.execute(labels);
-	fp.execute();
-	bp.execute(labels);
+	std::cout<<"~~~~Error~~~~: "<<bp.get_error_val()<<std::endl;
+	}
+
 
 	std::cout<<"output neurons result: \n"<<*output_layer->get_neurons_ptr()<<std::endl;
+
+	std::cout<<"weights input_layer: \n"<<*input_layer->get_output_weights_ptr()->get_weights_mat()<<std::endl;
+	std::cout<<"weights hidden_layer: \n"<<*hidden_layer->get_output_weights_ptr()->get_weights_mat()<<std::endl;
+	std::cout<<"weights hidden_layer_2: \n"<<*hidden_layer_2->get_output_weights_ptr()->get_weights_mat()<<std::endl;
 
 	return 0;
 

@@ -26,19 +26,11 @@ namespace LossFunctions
 	public:
 		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
 		{
-
-			std::cout<<"y: "<<y<<std::endl;
-			std::cout<<"y_pred: "<<y_pred<<std::endl;
-
 			VectorXd tmp = y-y_pred;
-			std::cout<<"tmp: "<<tmp<<std::endl;
-
 			tmp = tmp.array().pow(2);
-			std::cout<<"tmp after pow: "<<tmp<<std::endl;
-
 			return tmp;
 		}
-		inline VectorXd derivative(VectorXd &y, VectorXd &y_pred) override
+		inline VectorXd derivative(VectorXd &y_pred,VectorXd &y) override
 		{
 			return y_pred - y;
 		}

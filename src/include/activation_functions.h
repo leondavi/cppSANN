@@ -176,7 +176,7 @@ public:
 
 
 typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
-#define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::ReLU>()
+#define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::Sigmoid>()
 
 } //Activations end
 
