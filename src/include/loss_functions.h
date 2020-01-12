@@ -3,6 +3,7 @@
 #include <eigen3/Eigen/Eigen>
 #include "math_methods.h"
 #include "normalization_functions.h"
+#include <iostream>
 
 using namespace Eigen;
 
@@ -20,6 +21,28 @@ namespace LossFunctions
 
 	};
 
+	class CrossEntropy : public Loss
+	{
+	public:
+		// Softargmax  f(x) = exp(xi)/sum(exp(xj))
+		inline VectorXd softmax(VectorXd &x)
+		{
+			double sum_e = x.array().exp().sum();
+			return x.array().exp()/sum_e;
+		}
+
+		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
+		{
+			VectorXd res = -y.array()*y_pred.array().log();
+			return res;
+
+		}
+		inline VectorXd derivative(VectorXd &y_pred,VectorXd &y) override
+		{
+			VectorXd res;
+			return res;
+		}
+	};
 
 	class MSELoss : public Loss
 	{

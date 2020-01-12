@@ -19,13 +19,15 @@ int main(int ac, char** av)
 	     7, 8, 9,
 		 10,11,12;
 	ANN::Weights new_weight(m);
-	VectorXd sample_vec(3),sample_vec2(3); sample_vec<<1,2,3; sample_vec2 << 2,4,6;
+	VectorXd sample_vec(3),sample_vec2(3); sample_vec<<1,1,2; sample_vec2 << 0,1,1;
 
 
 	std::cout<<"First row: "<< m.row(0) <<"\n";
 
-	LossFunctions::MSELoss mse_loss;
-	mse_loss.func(sample_vec,sample_vec2);
+	LossFunctions::CrossEntropy ce_loss;
+
+
+	std::cout<<"CE LOSS: \n"<<ce_loss.func(sample_vec,sample_vec2)<<std::endl;
 
 
 	std::cout<<"Softmax: \n"<<Normalization::softmax(sample_vec)<<std::endl;
@@ -49,10 +51,10 @@ int main(int ac, char** av)
 	std::cout<<"forward propagation testing: "<<std::endl;
 
 	VectorXd data_vec(8); data_vec << 1,2,3,4,3,2,1,0;
-	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8);
-	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6);
-	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6);
-	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4);
+	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::Tanh>());
+	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>());
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>());
+	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4,std::make_shared<Activations::Tanh>());
 
 	input_layer->set_input_data(data_vec);
 
@@ -64,10 +66,11 @@ int main(int ac, char** av)
 
 	ANN::Propagation::BackwardPropagation bp(output_layer,0.01);
 
-	VectorXd labels(4); labels << 0,1,1,0;
+	VectorXd labels(4); labels << 1,0.5,0,1;
 
-	for (int i=0; i<14000; i++)
+	for (int i=0; i<100; i++)
 	{
+	input_layer->set_input_data(data_vec);
 	fp.execute();
 	bp.execute(labels);
 	std::cout<<"~~~~Error~~~~: "<<bp.get_error_val()<<std::endl;
