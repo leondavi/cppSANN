@@ -47,6 +47,9 @@ public:
 
 	//---- setters ----//
 	void set_bias(double bias_val) { this->bias_ = bias_val; }
+	void set_weights(MatrixXd new_weights) { this->weights_mat_ = new_weights; }
+	void subtract_weights(MatrixXd diff_weights) { this->weights_mat_ -= diff_weights; }
+	void subtract_bias(double diff) {this->bias_ -= diff;}
 
 	VectorXd dot(VectorXd given_vec)
 	{

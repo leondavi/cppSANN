@@ -3,6 +3,7 @@
 #include <eigen3/Eigen/Eigen>
 #include "math_methods.h"
 #include "normalization_functions.h"
+#include <iostream>
 
 using namespace Eigen;
 
@@ -15,49 +16,53 @@ namespace LossFunctions
 
 		virtual ~Loss() {};
 
-		virtual double func(VectorXd &y, VectorXd &y_pred) = 0;
+		virtual VectorXd func(VectorXd &y, VectorXd &y_pred) = 0;
+		virtual VectorXd derivative(VectorXd &y, VectorXd &y_pred) = 0;
+
 	};
 
-	/**
-	 * This is the LogLoss function.
-	 * It gives a penately for wrong binary classifications.
-	 * It consists out of two loss fucntions for positive class Y=1 and negative class Y=0:
-	 * Positive class: Loss = -log(Y_pred)
-	 * Negative class: Loss = -log(1-Y_pred)
-	 */
-	class LogLoss
+	class CrossEntropy : public Loss
 	{
 	public:
-		inline VectorXd func(VectorXd &y, VectorXd &y_pred)
+		// Softargmax  f(x) = exp(xi)/sum(exp(xj))
+		inline VectorXd softmax(VectorXd &x)
 		{
-			return y.array()*y_pred.array().log()*(-1)+(1-y.array())*(1-y_pred.array()).log()*(-1);
+			double sum_e = x.array().exp().sum();
+			return x.array().exp()/sum_e;
+		}
+
+		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
+		{
+			VectorXd res = -y.array()*y_pred.array().log();
+			return res;
+
+		}
+		inline VectorXd derivative(VectorXd &y_pred,VectorXd &y) override
+		{
+			VectorXd res;
+			return res;
 		}
 	};
 
-	/**
-	 * CategoricalCrossEntropyLoss
-	 *
-	 * LogLoss(y,softmax(Y_pred))
-	 */
-	class CategoricalCrossEntropyLoss : Loss
+	class MSELoss : public Loss
 	{
 	public:
-			inline double func(VectorXd &y, VectorXd &y_pred) override
-			{
-				LogLoss logloss;
-				VectorXd y_pred_softmax = Normalization::softmax(y_pred);
-				return logloss.func(y,y_pred_softmax).sum();
-			}
-	};
-
-	class MSELoss : Loss
-	{
-	public:
-		inline double func(VectorXd &y, VectorXd &y_pred) override
+		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
 		{
-			return ExtMath::mse(y,y_pred);
+			VectorXd tmp = y-y_pred;
+			tmp = tmp.array().pow(2);
+			return tmp;
 		}
+		inline VectorXd derivative(VectorXd &y_pred,VectorXd &y) override
+		{
+			return y_pred - y;
+		}
+
+
 
 	};
 
 }
+
+typedef std::shared_ptr<LossFunctions::Loss> LossFunctionPtr ;
+
