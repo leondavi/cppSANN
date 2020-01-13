@@ -51,10 +51,10 @@ int main(int ac, char** av)
 	std::cout<<"forward propagation testing: "<<std::endl;
 
 	VectorXd data_vec(8); data_vec << 1,2,3,4,3,2,1,0;
-	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
-	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
-	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
-	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
+	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
 
 	input_layer->set_input_data(data_vec);
 
@@ -68,7 +68,7 @@ int main(int ac, char** av)
 
 	VectorXd labels(4); labels << 1,0.5,0.5,1;
 
-	for (int i=0; i<1000; i++)
+	for (int i=0; i<10000; i++)
 	{
 	input_layer->set_input_data(data_vec);
 	fp.execute();
