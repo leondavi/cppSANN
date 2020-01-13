@@ -68,7 +68,7 @@ int main(int ac, char** av)
 
 	VectorXd labels(4); labels << 1,0.5,0.5,1;
 
-	for (int i=0; i<10000; i++)
+	for (int i=0; i<80; i++)
 	{
 	input_layer->set_input_data(data_vec);
 	fp.execute();

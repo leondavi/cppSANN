@@ -2,6 +2,7 @@
 
 #include <eigen3/Eigen/Eigen>
 #include "loss_functions.h"
+#include <iostream>
 
 #define MINI_BATCH_GRADIENT_DEFAULT_BATCH_SIZE 50
 #define MOMENTUM_DEFAULT_GAMMA_VAL 0.9
@@ -200,6 +201,53 @@ public:
 		v_p_bias_ = v_bias_;
 	}
 };
+
+class Adagrad : public Optimizer
+{
+private:
+
+	double epsilon_;
+	bool init;
+
+	MatrixXd Gt_;
+
+
+public:
+
+	Adagrad(double epsilon = 1e-8) : Optimizer(),epsilon_(epsilon),init(true)
+		{}
+
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	{
+		if (init)
+		{
+			Gt_ = W_grad.array().pow(2);
+			init = false;
+		}
+		else
+		{
+	//		std::cout<<"Gt before pow: \n"<<Gt_<<std::endl;
+			Gt_.array() += W_grad.array().pow(2);
+	//		std::cout<<"Gt after pow: \n"<<Gt_<<std::endl;
+		}
+		MatrixXd denominator(Gt_);
+		denominator += epsilon_*MatrixXd::Ones(denominator.rows(),denominator.cols());
+	//	std::cout<<"Gt before sqrt: \n"<<denominator<<std::endl;
+		denominator = denominator.cwiseSqrt();
+	//	std::cout<<"Gt after sqrt: \n"<<denominator<<std::endl;
+		denominator = denominator.cwiseInverse();//TODO find better implementation
+	//	std::cout<<"Gt after cwiseinverse: \n"<<denominator<<std::endl;
+
+		Weights -= lr*denominator.cwiseProduct(W_grad);
+
+		//std::cout<<"weights: \n"<<Weights<<std::endl;
+
+
+	}
+
+};
+
+
 
 
 }
