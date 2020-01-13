@@ -148,6 +148,10 @@ private:
 
 	LossFunctionPtr loss_func_;
 
+	/**
+	 * Loss is given only for vectors
+	 * This is a workaround to compute the loss of two matrices
+	 */
 	MatrixXd get_loss_derivative_between_mats(MatrixXd &y_mat,MatrixXd &y_pred_mat)
 	{
 		MatrixXd res(y_mat.rows(),y_mat.cols());
@@ -181,9 +185,10 @@ public:
 			init = false;
 		}
 
-		MatrixXd  next_pos_grad = get_loss_derivative_between_mats(Weights,gamma_*v_p_);
+		MatrixXd gamma_times_v_p_ = gamma_*v_p_;
+		MatrixXd  next_pos_grad = get_loss_derivative_between_mats(Weights,gamma_times_v_p_);
 		//calculating current v(t) and v_bias(t)
-		v_ = lr*next_pos_grad+gamma_*v_p_;
+		v_ = lr*next_pos_grad+gamma_times_v_p_;
 		v_bias_ = lr*bias_diff+gamma_*v_p_bias_;
 
 		//update weights and bias
