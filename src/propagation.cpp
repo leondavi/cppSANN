@@ -44,9 +44,9 @@ bool ForwardPropagation::execute()
 
 			if(DEBUG_FLAG)
 			{
-			std::cout<<"Weights: \n"<<*output_weights_ptr->get_weights_mat()<<std::endl;
+			std::cout<<"Weights: \n"<<*output_weights_ptr->get_weights_mat_ptr()<<std::endl;
 			std::cout<<"Neurons: \n"<<*current_layer->get_neurons_ptr()<<std::endl;
-			std::cout<<"Bias: \n"<<output_weights_ptr->get_bias()<<std::endl;
+			std::cout<<"Bias: \n"<<*output_weights_ptr->get_bias_ptr()<<std::endl;
 			}
 
 
@@ -57,7 +57,7 @@ bool ForwardPropagation::execute()
 			std::cout<<"Dot result Wx: \n"<<Wx_val<<std::endl;
 			}
 
-			Wx_val = Wx_val + output_weights_ptr->get_bias()*VectorXd::Ones(Wx_val.rows());
+			Wx_val = Wx_val + (*output_weights_ptr->get_bias_ptr())*VectorXd::Ones(Wx_val.rows());
 
 			if(DEBUG_FLAG)
 			{
@@ -132,35 +132,37 @@ bool BackwardPropagation::execute(VectorXd Y)
 					{
 			std::cout<<"Previous Neurons: \n"<<*(previous_layer->get_neurons_ptr())<<std::endl;
 					}
-			MatrixXd weights_diff(current_layer->get_input_weights_ptr()->get_weights_mat()->rows(),
-								  current_layer->get_input_weights_ptr()->get_weights_mat()->cols());
+			//initialize the size of gradient (grad value per each weight)
+			MatrixXd weights_grad(current_layer->get_input_weights_ptr()->get_weights_mat_ptr()->rows(),
+								  current_layer->get_input_weights_ptr()->get_weights_mat_ptr()->cols());
 
 
 			double bias_diff;
 
 			VectorXd dcurr_dprev(dout_dnet.size());
 
-			for (uint32_t row = 0; row < weights_diff.rows(); row++)
+			for (uint32_t row = 0; row < weights_grad.rows(); row++)
 			{
 				double etot_dout_sc = dEtot_dout(row);
 				double dout_dnet_sc = dout_dnet(row);
 				dcurr_dprev(row) = etot_dout_sc*dout_dnet_sc;
-				weights_diff.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc*this->lr_;
-				bias_diff += this->lr_*etot_dout_sc*dout_dnet_sc;
+				weights_grad.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc;
+				bias_diff += etot_dout_sc*dout_dnet_sc;
 			}
 
 			if(DEBUG_FLAG_BP)
 					{
-			std::cout<<"weights diff: \n"<<weights_diff<<std::endl;
-			std::cout<<"weights_mat: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat())<<std::endl;
+			std::cout<<"weights diff: \n"<<weights_grad<<std::endl;
+			std::cout<<"weights_mat: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr())<<std::endl;
 					}
 
-			current_layer->get_input_weights_ptr()->subtract_weights(weights_diff);
-			current_layer->get_input_weights_ptr()->subtract_bias(bias_diff);
+			current_layer->get_optimizer()->optimize(*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr()),weights_grad,
+													 *(current_layer->get_input_weights_ptr()->get_bias_ptr()),bias_diff,lr_);
+
 
 			if(DEBUG_FLAG_BP)
 					{
-			std::cout<<"weights_mat after diff: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat())<<std::endl;
+			std::cout<<"weights_mat after optimize: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr())<<std::endl;
 					}
 
 			current_layer = previous_layer;
@@ -169,7 +171,7 @@ bool BackwardPropagation::execute(VectorXd Y)
 					{
 			std::cout<<"dcurr_dprev\n"<<dcurr_dprev<<std::endl;
 					}
-			dEtot_dout = current_layer->get_output_weights_ptr()->get_weights_mat()->transpose()*dcurr_dprev;
+			dEtot_dout = current_layer->get_output_weights_ptr()->get_weights_mat_ptr()->transpose()*dcurr_dprev;
 			if(DEBUG_FLAG_BP)
 					{
 			std::cout<<"dEtot_dout\n"<<dEtot_dout<<std::endl;

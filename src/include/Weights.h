@@ -41,8 +41,8 @@ public:
 
 	//---- getters -----//
 
-	MatrixXd* get_weights_mat() { return &(this->weights_mat_); }
-	double get_bias() { return this->bias_; }
+	MatrixXd* get_weights_mat_ptr() { return &(this->weights_mat_); }
+	double* get_bias_ptr() { return &(this->bias_); }
 
 
 	//---- setters ----//

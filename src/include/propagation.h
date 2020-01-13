@@ -48,6 +48,7 @@ private:
 	LossFunctionPtr loss_func_;
 	double error_;
 
+
 public:
 
 	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr,

@@ -47,8 +47,8 @@ bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Laye
 
 	if(next_layer_inst && current_layer_inst)
 	{
-		bool weight_mat_size_correct = (weights_ptr->get_weights_mat()->rows() == next_layer_inst->get_layer_size()) &&
-											weights_ptr->get_weights_mat()->cols() == current_layer_inst->get_layer_size();
+		bool weight_mat_size_correct = (weights_ptr->get_weights_mat_ptr()->rows() == next_layer_inst->get_layer_size()) &&
+											weights_ptr->get_weights_mat_ptr()->cols() == current_layer_inst->get_layer_size();
 
 		if(!weight_mat_size_correct)
 		{
@@ -92,8 +92,8 @@ bool Layer::get_has_previous()
 
 //********* InputLayer *************//
 
-InputLayer::InputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,std::weak_ptr<Layer> next_layer) :
-						Layer(layer_size,activation_func,std::weak_ptr<Layer>(),next_layer),layer_type(INPUT_LAYER)
+InputLayer::InputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,OptimizerPtr optimizer,std::weak_ptr<Layer> next_layer) :
+						Layer(layer_size,activation_func,optimizer,std::weak_ptr<Layer>(),next_layer),layer_type(INPUT_LAYER)
 {
 
 }
@@ -102,8 +102,8 @@ InputLayer::InputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func
 
 
 //********* OutputLayer ***********//
-OutputLayer::OutputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,std::weak_ptr<Layer> previous_layer) :
-						Layer(layer_size,activation_func,std::weak_ptr<Layer>(),previous_layer),layer_type(OUTPUT_LAYER)
+OutputLayer::OutputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,OptimizerPtr optimizer,std::weak_ptr<Layer> previous_layer) :
+						Layer(layer_size,activation_func,optimizer,std::weak_ptr<Layer>(),previous_layer),layer_type(OUTPUT_LAYER)
 {
 
 }

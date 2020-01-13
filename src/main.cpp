@@ -51,10 +51,10 @@ int main(int ac, char** av)
 	std::cout<<"forward propagation testing: "<<std::endl;
 
 	VectorXd data_vec(8); data_vec << 1,2,3,4,3,2,1,0;
-	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::Tanh>());
-	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>());
-	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>());
-	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4,std::make_shared<Activations::Tanh>());
+	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
+	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
+	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::MiniBatchGradientDescent>(15));
 
 	input_layer->set_input_data(data_vec);
 
@@ -66,9 +66,9 @@ int main(int ac, char** av)
 
 	ANN::Propagation::BackwardPropagation bp(output_layer,0.01);
 
-	VectorXd labels(4); labels << 1,0.5,0,1;
+	VectorXd labels(4); labels << 1,0.5,0.5,1;
 
-	for (int i=0; i<100; i++)
+	for (int i=0; i<1000; i++)
 	{
 	input_layer->set_input_data(data_vec);
 	fp.execute();
@@ -79,9 +79,9 @@ int main(int ac, char** av)
 
 	std::cout<<"output neurons result: \n"<<*output_layer->get_neurons_ptr()<<std::endl;
 
-	std::cout<<"weights input_layer: \n"<<*input_layer->get_output_weights_ptr()->get_weights_mat()<<std::endl;
-	std::cout<<"weights hidden_layer: \n"<<*hidden_layer->get_output_weights_ptr()->get_weights_mat()<<std::endl;
-	std::cout<<"weights hidden_layer_2: \n"<<*hidden_layer_2->get_output_weights_ptr()->get_weights_mat()<<std::endl;
+	std::cout<<"weights input_layer: \n"<<*input_layer->get_output_weights_ptr()->get_weights_mat_ptr()<<std::endl;
+	std::cout<<"weights hidden_layer: \n"<<*hidden_layer->get_output_weights_ptr()->get_weights_mat_ptr()<<std::endl;
+	std::cout<<"weights hidden_layer_2: \n"<<*hidden_layer_2->get_output_weights_ptr()->get_weights_mat_ptr()<<std::endl;
 
 	return 0;
 

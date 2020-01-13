@@ -14,6 +14,7 @@
 
 #include "Weights.h"
 #include "activation_functions.h"
+#include "optimizers.h"
 
 
 using namespace Eigen;
@@ -33,6 +34,7 @@ private:
 	VectorXd neurons_; //column vector
 	int layer_type;
 	ActivationFunctionPtr activation_func_ptr_;
+	OptimizerPtr optimizer_;
 
 	std::weak_ptr<Layer> previous_layer_ptr_;
 	std::weak_ptr<Layer> next_layer_ptr_;
@@ -45,10 +47,12 @@ private:
 public:
 
 	Layer(uint32_t layer_size, ActivationFunctionPtr activation_func_ptr = DEFAULT_ACTIVATION_FUNC,
+			OptimizerPtr optimizer = DEFAULT_OPTIMIZER,
 			std::weak_ptr<Layer> previous_layer_ptr = std::weak_ptr<Layer>(),
 			std::weak_ptr<Layer> next_layer_ptr = std::weak_ptr<Layer>()) :
 		layer_size_(layer_size),neurons_(layer_size),layer_type(NORMAL_LAYER),
 		activation_func_ptr_(activation_func_ptr),
+		optimizer_(optimizer),
 		previous_layer_ptr_(previous_layer_ptr),next_layer_ptr_(next_layer_ptr)
 	{
 
@@ -69,6 +73,8 @@ public:
 
 	bool get_has_next();
 	bool get_has_previous();
+
+	OptimizerPtr get_optimizer() { return this->optimizer_; }
 	//---- setters ----//
 
 	virtual inline void set_next_layer_ptr(std::weak_ptr<Layer> next_layer_ptr) { this->next_layer_ptr_ = next_layer_ptr; }
@@ -95,7 +101,8 @@ private:
 
 public:
 
-	InputLayer(uint32_t layer_size, ActivationFunctionPtr activation_func = std::make_shared<Activations::None>(),std::weak_ptr<Layer> next_layer = std::weak_ptr<Layer>());
+	InputLayer(uint32_t layer_size, ActivationFunctionPtr activation_func = std::make_shared<Activations::None>(),
+			   OptimizerPtr optimizer = DEFAULT_OPTIMIZER,std::weak_ptr<Layer> next_layer = std::weak_ptr<Layer>());
 
 	//---- getters ----//
 
@@ -118,7 +125,8 @@ private:
 	int layer_type;
 
 public:
-	OutputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func = DEFAULT_ACTIVATION_FUNC,std::weak_ptr<Layer> previous_layer = std::weak_ptr<Layer>());
+	OutputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func = DEFAULT_ACTIVATION_FUNC,
+				OptimizerPtr optimizer = DEFAULT_OPTIMIZER,std::weak_ptr<Layer> previous_layer = std::weak_ptr<Layer>());
 
 	//---- getters ----//
 	inline void set_next_layer_ptr(std::weak_ptr<Layer> next_layer_ptr) override { throw std::runtime_error("No connect next for OutpoutLayer"); }
