@@ -95,8 +95,10 @@ bool ForwardPropagation::execute()
 
 bool BackwardPropagation::execute(VectorXd Y)
 {
+	if(DEBUG_FLAG_BP)
+	{
 	std::cout<<"--------------------------\nBackward Prop\n--------------------------"<<std::endl;
-
+	}
 	std::shared_ptr<Layer> current_layer;
 	std::shared_ptr<Layer> previous_layer;
 
