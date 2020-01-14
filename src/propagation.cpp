@@ -163,9 +163,9 @@ bool BackwardPropagation::execute(VectorXd Y)
 
 
 			if(DEBUG_FLAG_BP)
-					{
-			std::cout<<"weights_mat after optimize: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr())<<std::endl;
-					}
+			{
+				std::cout<<"weights_mat after optimize: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr())<<std::endl;
+			}
 
 			current_layer = previous_layer;
 

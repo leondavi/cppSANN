@@ -50,14 +50,14 @@ int main(int ac, char** av)
 
 	std::cout<<"forward propagation testing: "<<std::endl;
 
-	//VectorXd data_vec(32); data_vec << 1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0;
-	VectorXd data_vec(8); data_vec << 1,2,3,8,3,2,1,0;
+	VectorXd data_vec(32); data_vec << 1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0;
+	//VectorXd data_vec(8); data_vec << 1,2,3,8,3,2,1,0;
 
-	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::None>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::Layer> hidden_layer_3 = std::make_shared<ANN::Layer>(4,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(2,std::make_shared<Activations::Sigmoid>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(32,std::make_shared<Activations::None>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(16,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(8,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::Layer> hidden_layer_3 = std::make_shared<ANN::Layer>(16,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(32,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::Momentum>());
 
 	input_layer->set_input_data(data_vec);
 
@@ -70,10 +70,10 @@ int main(int ac, char** av)
 
 	ANN::Propagation::BackwardPropagation bp(output_layer,0.01);
 
-	//VectorXd labels(32); labels << 1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0;
-	VectorXd labels(2); labels << 1,0;
+	VectorXd labels(32); labels << 1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0;
+	//VectorXd labels(2); labels << 1,0;
 
-	for (int i=0; i<100; i++)
+	for (int i=0; i<1000; i++)
 	{
 	input_layer->set_input_data(data_vec);
 	fp.execute();
