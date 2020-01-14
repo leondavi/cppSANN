@@ -50,30 +50,36 @@ int main(int ac, char** av)
 
 	std::cout<<"forward propagation testing: "<<std::endl;
 
-	VectorXd data_vec(8); data_vec << 1,2,3,4,3,2,1,0;
-	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
-	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
-	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
-	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(4,std::make_shared<Activations::Tanh>(),std::make_shared<Optimizers::Momentum>());
+	//VectorXd data_vec(32); data_vec << 1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0;
+	VectorXd data_vec(8); data_vec << 1,2,3,8,3,2,1,0;
+
+	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(8,std::make_shared<Activations::None>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(6,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::Layer> hidden_layer_3 = std::make_shared<ANN::Layer>(4,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(2,std::make_shared<Activations::Sigmoid>(),std::make_shared<Optimizers::Momentum>());
 
 	input_layer->set_input_data(data_vec);
 
 	ANN::Layer::connect_layers(input_layer,hidden_layer);
 	ANN::Layer::connect_layers(hidden_layer,hidden_layer_2);
-	ANN::Layer::connect_layers(hidden_layer_2,output_layer);
+	ANN::Layer::connect_layers(hidden_layer_2,hidden_layer_3);
+	ANN::Layer::connect_layers(hidden_layer_3,output_layer);
 
 	ANN::Propagation::ForwardPropagation fp(input_layer);
 
 	ANN::Propagation::BackwardPropagation bp(output_layer,0.01);
 
-	VectorXd labels(4); labels << 1,0.5,0.5,1;
+	//VectorXd labels(32); labels << 1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0,1,2,3,8,3,2,1,0;
+	VectorXd labels(2); labels << 1,0;
 
-	for (int i=0; i<80; i++)
+	for (int i=0; i<100; i++)
 	{
 	input_layer->set_input_data(data_vec);
 	fp.execute();
+	//std::cout<<"output neurons result: \n"<<*output_layer->get_neurons_ptr()<<std::endl;
 	bp.execute(labels);
-	std::cout<<"~~~~Error~~~~: "<<bp.get_error_val()<<std::endl;
+	std::cout<<i<<". Error: "<<bp.get_error_val()<<std::endl;
 	}
 
 

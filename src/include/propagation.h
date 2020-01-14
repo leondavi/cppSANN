@@ -12,6 +12,8 @@
 #include "loss_functions.h"
 #include "Layer.h"
 
+#define DEFAULT_LEARNING_RATE 0.01
+
 namespace ANN
 {
 
@@ -52,7 +54,7 @@ private:
 public:
 
 	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr,
-						double learning_rate,
+						double learning_rate = DEFAULT_LEARNING_RATE,
 						LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
 		output_layer_ptr_(output_layer_ptr),
 		lr_(learning_rate),

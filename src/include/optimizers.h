@@ -28,7 +28,10 @@ public:
 	 */
 	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
 	{
+	//	std::cout<<"in Weights:\n"<<Weights<<std::endl;
 		Weights -= lr*W_grad;
+	//	std::cout<<"out Weights:\n"<<Weights<<std::endl;
+
 		bias -= bias_diff;
 	}
 };
@@ -239,6 +242,8 @@ public:
 	//	std::cout<<"Gt after cwiseinverse: \n"<<denominator<<std::endl;
 
 		Weights -= lr*denominator.cwiseProduct(W_grad);
+
+		bias -= bias_diff;
 
 		//std::cout<<"weights: \n"<<Weights<<std::endl;
 
