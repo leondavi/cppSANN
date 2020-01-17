@@ -31,13 +31,13 @@ namespace LossFunctions
 			return x.array().exp()/sum_e;
 		}
 
-		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
+		inline VectorXd func(VectorXd &y_pred, VectorXd &y) override
 		{
 			VectorXd res = -y.array()*y_pred.array().log();
 			return res;
 
 		}
-		inline VectorXd derivative(VectorXd &y_pred,VectorXd &y) override
+		inline VectorXd derivative(VectorXd &y_pred, VectorXd &y) override
 		{
 			VectorXd res;
 			return res;
@@ -47,9 +47,9 @@ namespace LossFunctions
 	class MSELoss : public Loss
 	{
 	public:
-		inline VectorXd func(VectorXd &y, VectorXd &y_pred) override
+		inline VectorXd func(VectorXd &y_pred, VectorXd &y) override
 		{
-			VectorXd tmp = y-y_pred;
+			VectorXd tmp = y_pred-y;
 			tmp = tmp.array().pow(2);
 			return tmp;
 		}

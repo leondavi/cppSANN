@@ -170,7 +170,7 @@ public:
 
 	inline double function_derivative(double x)
 	{
-		return x;
+		return 1;
 	}
 };
 
