@@ -23,6 +23,7 @@ public:
 };
 
 
+
 /**
  * Sigmoid
  * Pros:
@@ -47,6 +48,31 @@ public:
 		double sigmoid_x = function(x);
 		return sigmoid_x*(1-sigmoid_x);
 	}
+};
+
+/**
+ * Swish
+ * y = x*Sigmoid(x)
+ */
+class Swish : public ActivationFunction
+{
+private:
+	double B_;
+	Sigmoid sigmoid_;
+
+public:
+	inline double function(double x)
+	{
+		return B_*x*sigmoid_.function(x);
+	}
+
+	inline double function_derivative(double x)
+	{
+		double swish_x = function(x);
+		return swish_x+sigmoid_.function(x)*(B_-swish_x);
+	}
+
+	Swish(double b = 1) : B_(b) {};
 };
 
 /**
@@ -158,7 +184,7 @@ public:
 };
 
 /**
- * Doesn't impact anything - Mainly for debug or layers without activation function such as input layer
+ * Doesn't impact anything - Mainly for debug or layers without activation function such as output layer
  */
 class None : public ActivationFunction
 {
