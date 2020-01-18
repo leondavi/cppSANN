@@ -68,8 +68,8 @@ public:
 
 	inline double function_derivative(double x)
 	{
-		double swish_x = function(x);
-		return swish_x+sigmoid_.function(x)*(B_-swish_x);
+		double sigmoid_x = sigmoid_.function(x);
+		return B_*(sigmoid_x+x*sigmoid_x*(1-sigmoid_x));
 	}
 
 	Swish(double b = 1) : B_(b) {};

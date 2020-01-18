@@ -54,9 +54,9 @@ int main(int ac, char** av)
 	//VectorXd data_vec(8); data_vec << 1,2,3,8,3,2,1,0;
 
 	std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(32,std::make_shared<Activations::None>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(16,std::make_shared<Activations::ELU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(8,std::make_shared<Activations::ELU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
-	std::shared_ptr<ANN::Layer> hidden_layer_3 = std::make_shared<ANN::Layer>(16,std::make_shared<Activations::ELU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::Layer> hidden_layer = std::make_shared<ANN::Layer>(16,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::Layer> hidden_layer_2 = std::make_shared<ANN::Layer>(8,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
+	std::shared_ptr<ANN::Layer> hidden_layer_3 = std::make_shared<ANN::Layer>(16,std::make_shared<Activations::LeakyReLU>(),std::make_shared<Optimizers::StochasticGradientDescent>());
 	std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(32,std::make_shared<Activations::None>(),std::make_shared<Optimizers::StochasticGradientDescent>());
 
 	input_layer->set_input_data(data_vec);
