@@ -32,7 +32,7 @@ public:
 		Weights -= lr*W_grad;
 	//	std::cout<<"out Weights:\n"<<Weights<<std::endl;
 
-		bias -= bias_diff;
+		bias -= lr*bias_diff;
 	}
 };
 

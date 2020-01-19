@@ -76,11 +76,6 @@ public:
 };
 
 
-
-/**
- * Note: Must be used with lambda function that envelope this function and set alpha param
- * Example: [](double x){return Activations::LeakyReLU(x,0.01);}
- */
 class LeakyReLU : public ActivationFunction
 {
 
