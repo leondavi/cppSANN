@@ -46,7 +46,7 @@ private:
 
 public:
 
-	Layer(uint32_t layer_size, ActivationFunctionPtr activation_func_ptr = DEFAULT_ACTIVATION_FUNC,
+	Layer(uint32_t layer_size, ActivationFunctionPtr activation_func_ptr = std::make_shared<Activations::None>(),
 			OptimizerPtr optimizer = DEFAULT_OPTIMIZER,
 			std::weak_ptr<Layer> previous_layer_ptr = std::weak_ptr<Layer>(),
 			std::weak_ptr<Layer> next_layer_ptr = std::weak_ptr<Layer>()) :

@@ -72,8 +72,8 @@ public:
 		}
 		else
 		{
-			bias_acc_ += bias_diff;
-			grad_acc_ += W_grad;
+			bias_acc_ += lr*bias_diff;
+			grad_acc_ += lr*W_grad;
 		}
 		curr_batch_++;
 
