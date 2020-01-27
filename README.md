@@ -19,4 +19,7 @@ cpp programs. It is based on [Eigen library](https://eigen.tuxfamily.org/dox/).
 1. Build by running: ```scons``` in main directory. 
 2. Clean the project: ```scons -c``` in main directory. 
 
-Please cite cppSANN if you use it for your research. 
+
+## License 
+cppSANN is given for free. (You should inspect Eigen library license also), 
+Please cite cppSANN if you use it in your research or application. 
