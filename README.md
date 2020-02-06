@@ -5,6 +5,7 @@ Still in development
 This library is a simple implementation of artificial neural network.
 It doesn't use logger or complex things in order to achieve an easy integration with other 
 cpp programs. It is based on [Eigen library](https://eigen.tuxfamily.org/dox/). 
+Implementations Include comments and explanation for an easier learning. 
 
 ### Requiremnts:
 
