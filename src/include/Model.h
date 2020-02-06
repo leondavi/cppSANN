@@ -66,6 +66,9 @@ namespace SANN
 
 		//setters
 	    void set_layers(std::vector<uint32_t> model_by_layers_size,std::vector<Activations::act_t> model_activations = std::vector<Activations::act_t>());
+	    void set_activations(std::vector<Activations::act_t> model_activations = std::vector<Activations::act_t>());
+	    void set_activations_hidden_only(std::vector<Activations::act_t> model_activations);
+
 		void set_learning_rate(double learning_rate) {this->lr_ = learning_rate; }
 		void set_optimizer(Optimizers::opt_t opt_val,int layer_idx = -1);
 

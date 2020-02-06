@@ -83,6 +83,7 @@ public:
 	virtual inline void set_output_weights(std::shared_ptr<Weights> output_weight) { this->output_weights_ptr_ = output_weight; }
 	virtual inline void set_optimizer(OptimizerPtr optimizer) { this->optimizer_ = optimizer; }
 	virtual bool set_new_val_to_neurons(VectorXd &new_neurons_val);
+	virtual inline void set_activation_func_ptr(ActivationFunctionPtr act_func_ptr) { this->activation_func_ptr_ = act_func_ptr; }
 
 
 	//---- static functions ----//

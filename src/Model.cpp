@@ -80,6 +80,34 @@ namespace SANN
 		}
     }
 
+    /**
+	 * Assumes that layers exists
+	 */
+    void Model::set_activations_hidden_only(std::vector<Activations::act_t> model_activations)
+    {
+    	if(model_activations.size() == (layers_.size()-2))//without input and output
+    	{
+    		model_activations.insert(model_activations.begin(),Activations::ACT_NONE);
+    		model_activations.push_back(Activations::ACT_NONE);
+    		set_activations(model_activations);
+    	}
+    }
+
+    /**
+     * Assumes that layers exists
+     */
+    void Model::set_activations(std::vector<Activations::act_t> model_activations)
+    {
+    	if(model_activations.size() == layers_.size())
+    	{
+			std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin();
+			for ( int i=0; it != layers_.end(); it++,i++)
+			{
+				(*it)->set_activation_func_ptr(select_activation(model_activations[i]));
+			}
+    	}
+    }
+
 	/**
 	 * If layer index wasn't given then set the optimizer of the last layer
 	 */
