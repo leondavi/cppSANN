@@ -75,8 +75,10 @@ namespace SANN
 
 				layers_.push_back(output_layer);
 			}
-
-			layers_.push_back(std::make_shared<ANN::Layer>(model_by_layers_size[i],act_ptr_vec[i],std::make_shared<Optimizers::SGD>()));
+			else
+			{
+				layers_.push_back(std::make_shared<ANN::Layer>(model_by_layers_size[i],act_ptr_vec[i],std::make_shared<Optimizers::SGD>()));
+			}
 		}
     }
 
@@ -130,7 +132,7 @@ namespace SANN
     	if (validate_model())
     	{
     		std::list<std::shared_ptr<ANN::Layer>>::iterator it1 = layers_.begin(),it2 = std::next(layers_.begin(),1);
-    		for ( ; it2 != layers_.end(); it1++,it2++)
+    		for ( ; *it2 != layers_.back(); it1++,it2++)
     		{
     			(*it1)->connect_layers(*it1,*it2);
     		}
@@ -148,20 +150,38 @@ namespace SANN
      */
     double Model::train(MatrixXd data,MatrixXd labels,bool print_loss)
     {
+    	std::cout<<"data: \n"<<data<<std::endl;
+    	std::cout<<"labels: \n"<<labels<<std::endl;
+
 		bp_.set_params(lr_,loss_func_);
     	if(layers_connected_ == false)
     	{
     		connect_layers();
+    	}
+    	if((data.cols() != layers_.front()->get_layer_size()) ||
+    	   (labels.cols() != layers_.back()->get_layer_size()))
+    	{
+    		throw std::runtime_error("Input data or output labels size isn't fit input or output layer!");
     	}
     	double last_lost = std::numeric_limits<double>::infinity();
     	for (uint32_t row = 0; row < data.rows(); row++)
     	{
     		VectorXd input_data = (data.row(row)).transpose();
     		VectorXd label_data = (labels.row(row)).transpose();
+
+        	std::cout<<"input_data: \n"<<input_data<<std::endl;
+        	std::cout<<"label_data: \n"<<label_data<<std::endl;
+
     		layers_.front()->set_new_val_to_neurons(input_data);
+        	std::cout<<"in neurons: \n"<<*(layers_.front()->get_neurons_ptr())<<std::endl;
+        	std::cout<<"out neurons: \n"<<*(layers_.back()->get_neurons_ptr())<<std::endl;
+
     		fp_.set_input_layer(layers_.front());
     		fp_.execute();
     		bp_.execute(label_data);
+
+        	std::cout<<"out neurons: \n"<<*(layers_.back()->get_neurons_ptr())<<std::endl;
+
     		if(print_loss && (last_lost-bp_.get_error_val() > lr_))
     		{
     			std::cout<<"[cppSANN] iteration: "<<row<<" Loss val: "<<bp_.get_error_val()<<std::endl;
