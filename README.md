@@ -3,7 +3,7 @@ Still in development
 # cppSANN
 
 This library is a simple implementation of artificial neural network.
-It doesn't use logger or complex things in order to make it easy to integrate it with other 
+It doesn't use logger or complex things in order to achieve an easy integration with other 
 cpp programs. It is based on [Eigen library](https://eigen.tuxfamily.org/dox/). 
 
 ### Requiremnts:
