@@ -195,11 +195,34 @@ public:
 	}
 };
 
+	typedef enum {ACT_NONE,ACT_SIGMOID,ACT_RELU,ACT_LEAKY_RELU,ACT_SWISH,ACT_ELU} act_t;
 
-typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr ;
+} //end of Activation namespace
+
+typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr;
+
+/**
+ * Select actiation by enum in Optimizers::opt_t
+ */
+inline ActivationFunctionPtr select_activation(Activations::act_t ActVal)
+{
+	ActivationFunctionPtr chosen_act;
+	switch (ActVal)
+	{
+		case Activations::ACT_NONE         : { chosen_act = std::make_shared<Activations::None>(); break; }
+		case Activations::ACT_SIGMOID      : { chosen_act = std::make_shared<Activations::Sigmoid>(); break; }
+		case Activations::ACT_RELU         : { chosen_act = std::make_shared<Activations::ReLU>(); break; }
+		case Activations::ACT_LEAKY_RELU   : { chosen_act = std::make_shared<Activations::LeakyReLU>(); break; }
+		case Activations::ACT_SWISH        : { chosen_act = std::make_shared<Activations::Swish>(); break; }
+		case Activations::ACT_ELU          : { chosen_act = std::make_shared<Activations::ELU>(); break; }
+	}
+
+	return chosen_act;
+}
+
 #define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::Sigmoid>()
 
-} //Activations end
+
 
 
 

@@ -12,7 +12,7 @@
 #include "loss_functions.h"
 #include "Layer.h"
 
-#define DEFAULT_LEARNING_RATE 0.001
+#define DEFAULT_LEARNING_RATE 0.01
 
 namespace ANN
 {
@@ -29,11 +29,26 @@ private:
 
 public:
 
+	ForwardPropagation() {}
+
 	ForwardPropagation(std::shared_ptr<InputLayer> input_layer_ptr) : input_layer_ptr_(input_layer_ptr)
 	{
 
 	}
 
+	void set_input_layer(std::shared_ptr<InputLayer> input_layer_ptr)
+	{
+		this->input_layer_ptr_ = input_layer_ptr;
+	}
+	//setters
+	void set_input_layer(std::shared_ptr<Layer> input_layer_ptr)
+	{
+		if (input_layer_ptr->get_layer_type() == ANN::INPUT_LAYER)
+		{
+			std::shared_ptr<InputLayer> in_layer = std::dynamic_pointer_cast<InputLayer>(input_layer_ptr);
+			set_input_layer(in_layer);
+		}
+	}
 	bool execute();
 
 
@@ -56,12 +71,23 @@ public:
 	BackwardPropagation(std::shared_ptr<OutputLayer> output_layer_ptr,
 						double learning_rate = DEFAULT_LEARNING_RATE,
 						LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
-		output_layer_ptr_(output_layer_ptr),
-		lr_(learning_rate),
-		loss_func_(loss_func),
-		error_(0)
-	{
+						output_layer_ptr_(output_layer_ptr),
+						lr_(learning_rate),
+						loss_func_(loss_func),
+						error_(0)
+	{}
+	BackwardPropagation(double learning_rate = DEFAULT_LEARNING_RATE,
+						LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
+						lr_(learning_rate),
+						loss_func_(loss_func),
+						error_(0)
+	{}
 
+	//setters
+	void set_params(double learning_rate,LossFunctionPtr loss_func)
+	{
+		this->lr_ = learning_rate;
+		this->loss_func_ = loss_func;
 	}
 
 	bool execute(VectorXd Y);

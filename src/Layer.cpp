@@ -90,6 +90,16 @@ bool Layer::get_has_previous()
 	return false;
 }
 
+bool Layer::set_new_val_to_neurons(VectorXd &new_neurons_val)
+{
+	if(this->neurons_.size() == new_neurons_val.size())
+	{
+		this->neurons_ = new_neurons_val;
+		return true;
+	}
+	return false;
+}
+
 //********* InputLayer *************//
 
 InputLayer::InputLayer(uint32_t layer_size,ActivationFunctionPtr activation_func,OptimizerPtr optimizer,std::weak_ptr<Layer> next_layer) :

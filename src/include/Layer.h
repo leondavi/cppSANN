@@ -81,7 +81,8 @@ public:
 	virtual inline void set_previous_layer_ptr(std::weak_ptr<Layer> previous_layer_ptr) { this->previous_layer_ptr_ = previous_layer_ptr; }
 	virtual inline void set_input_weights(std::shared_ptr<Weights> input_weight) { this->input_weights_ptr_ = input_weight; }
 	virtual inline void set_output_weights(std::shared_ptr<Weights> output_weight) { this->output_weights_ptr_ = output_weight; }
-	virtual inline void set_new_val_to_neurons(VectorXd &new_neurons_val) { this->neurons_ = new_neurons_val; }
+	virtual inline void set_optimizer(OptimizerPtr optimizer) { this->optimizer_ = optimizer; }
+	virtual bool set_new_val_to_neurons(VectorXd &new_neurons_val);
 
 
 	//---- static functions ----//
