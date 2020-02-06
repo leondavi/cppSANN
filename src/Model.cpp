@@ -131,10 +131,14 @@ namespace SANN
     {
     	if (validate_model())
     	{
-    		std::list<std::shared_ptr<ANN::Layer>>::iterator it1 = layers_.begin(),it2 = std::next(layers_.begin(),1);
-    		for ( ; *it2 != layers_.back(); it1++,it2++)
+
+    		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
     		{
-    			(*it1)->connect_layers(*it1,*it2);
+    			if((*it)->get_layer_type() != ANN::OUTPUT_LAYER)
+    			{
+					std::list<std::shared_ptr<ANN::Layer>>::iterator next_it = std::next(it,1);
+					(*it)->connect_layers(*it,*next_it);
+    			}
     		}
     		layers_connected_ = true;
     		return true;
@@ -153,7 +157,13 @@ namespace SANN
     	std::cout<<"data: \n"<<data<<std::endl;
     	std::cout<<"labels: \n"<<labels<<std::endl;
 
+    	//set learning rate and loss function to backward propagation
 		bp_.set_params(lr_,loss_func_);
+
+		//set in and out layers to forward and backward propagation instances
+		fp_.set_input_layer(layers_.front());
+		bp_.set_output_layer(layers_.back());
+
     	if(layers_connected_ == false)
     	{
     		connect_layers();
@@ -163,7 +173,7 @@ namespace SANN
     	{
     		throw std::runtime_error("Input data or output labels size isn't fit input or output layer!");
     	}
-    	double last_lost = std::numeric_limits<double>::infinity();
+
     	for (uint32_t row = 0; row < data.rows(); row++)
     	{
     		VectorXd input_data = (data.row(row)).transpose();
@@ -176,17 +186,15 @@ namespace SANN
         	std::cout<<"in neurons: \n"<<*(layers_.front()->get_neurons_ptr())<<std::endl;
         	std::cout<<"out neurons: \n"<<*(layers_.back()->get_neurons_ptr())<<std::endl;
 
-    		fp_.set_input_layer(layers_.front());
     		fp_.execute();
     		bp_.execute(label_data);
 
         	std::cout<<"out neurons: \n"<<*(layers_.back()->get_neurons_ptr())<<std::endl;
 
-    		if(print_loss && (last_lost-bp_.get_error_val() > lr_))
+    		if(print_loss)
     		{
     			std::cout<<"[cppSANN] iteration: "<<row<<" Loss val: "<<bp_.get_error_val()<<std::endl;
     		}
-    		last_lost = bp_.get_error_val();
     	}
     	if(print_loss)
 		{

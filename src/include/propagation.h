@@ -84,7 +84,24 @@ public:
 	{}
 
 	//setters
-	void set_params(double learning_rate,LossFunctionPtr loss_func)
+
+
+
+	inline void set_output_layer(std::shared_ptr<Layer> output_layer_ptr)
+	{
+		if (output_layer_ptr->get_layer_type() == ANN::OUTPUT_LAYER)
+		{
+			std::shared_ptr<OutputLayer> out_layer = std::dynamic_pointer_cast<OutputLayer>(output_layer_ptr);
+			set_output_layer(out_layer);
+		}
+	}
+
+	inline void set_output_layer(std::shared_ptr<OutputLayer> output_layer_ptr)
+	{
+		this->output_layer_ptr_ = output_layer_ptr;
+	}
+
+	inline void set_params(double learning_rate,LossFunctionPtr loss_func)
 	{
 		this->lr_ = learning_rate;
 		this->loss_func_ = loss_func;

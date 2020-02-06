@@ -112,6 +112,10 @@ bool BackwardPropagation::execute(VectorXd Y)
 
 		error_ = this->loss_func_->func(*(current_layer->get_neurons_ptr()),Y).sum();
 
+		if(DEBUG_FLAG_BP)
+		{
+			std::cout<<"error: "<<error_<<std::endl;
+		}
 		VectorXd dEtot_dout = this->loss_func_->derivative(*(current_layer->get_neurons_ptr()),Y);
 
 		int l = 0;

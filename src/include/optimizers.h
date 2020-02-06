@@ -305,9 +305,7 @@ public:
 		}
 
 		MatrixXd grad_squared;
-		std::cout<<"before\n"<<W_grad<<std::endl;
 		grad_squared = W_grad.array()*W_grad.array();
-		std::cout<<"after\n"<<grad_squared<<std::endl;
 
 		mt_ = b1_*mt_former_ +  (1-b1_)*W_grad;
 		vt_ = b2_*vt_former_ +  (1-b2_)*grad_squared;
