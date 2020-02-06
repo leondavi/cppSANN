@@ -23,3 +23,6 @@ cpp programs. It is based on [Eigen library](https://eigen.tuxfamily.org/dox/).
 ## License 
 cppSANN is given for free. (You should inspect Eigen library license also), 
 Please cite cppSANN if you use it in your research or application. 
+We don't take any responsibility for using this library. 
+
+You are welcome to submit issues. 
