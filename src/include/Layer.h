@@ -69,6 +69,7 @@ public:
 	virtual inline int get_layer_type() { return this->layer_type; }
 	inline ActivationFunctionPtr get_activation_func_ptr()	{ return this->activation_func_ptr_; }
 	inline VectorXd* get_neurons_ptr() { return &(this->neurons_); }
+	inline VectorXd get_neurons() { return this->neurons_; }
 
 
 	bool get_has_next();

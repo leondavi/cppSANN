@@ -23,19 +23,6 @@ inline Eigen::MatrixXd randn(uint32_t rows, uint32_t cols,double mu = 0.,double 
 	return newMat;
 }
 
-inline Eigen::VectorXd randn(uint32_t size,double mu=0.,double var=1.)
-{
-	std::default_random_engine generator;
-	std::normal_distribution<double> distribution(mu,var);
-	Eigen::VectorXd newVec(size);
-	for (uint32_t i = 0; i < size; i++)
-	{
-		newVec(i) = distribution(generator);
-	}
-
-	return newVec;
-}
-
 /**
  * function changes the value of each cell in mat by given func
  */

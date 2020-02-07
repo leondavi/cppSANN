@@ -127,6 +127,33 @@ namespace SANN
 
 	};
 
+	std::vector<std::shared_ptr<ANN::Weights>> Model::get_weights_of_model()
+	{
+		std::vector<std::shared_ptr<ANN::Weights>> vec_of_weights_ptrs;
+		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
+		{
+			if((*it)->get_layer_type() != ANN::OUTPUT_LAYER)
+			{
+				vec_of_weights_ptrs.push_back((*it)->get_output_weights_ptr());
+			}
+		}
+		return vec_of_weights_ptrs;
+	}
+
+	/**
+	 * Returns vector of neurons for each layer in model
+	 */
+	std::vector<VectorXd> Model::get_neurons_of_model()
+	{
+		std::vector<VectorXd> vec_of_layers_of_neurons;
+		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
+		{
+			vec_of_layers_of_neurons.push_back((*it)->get_neurons());
+		}
+		return vec_of_layers_of_neurons;
+	}
+
+
     bool Model::connect_layers()
     {
     	if (validate_model())

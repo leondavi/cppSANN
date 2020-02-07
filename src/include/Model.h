@@ -73,7 +73,9 @@ namespace SANN
 		void set_optimizer(Optimizers::opt_t opt_val,int layer_idx = -1);
 
 
-		std::vector<MatrixXd> get_weights_of_model();//TODO
+		std::vector<std::shared_ptr<ANN::Weights>> get_weights_of_model();
+		std::vector<VectorXd> get_neurons_of_model();
+
 		void load_weights_of_model(std::string path);//TODO
 
 		void save_model_to_file();//TODO
