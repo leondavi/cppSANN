@@ -59,7 +59,7 @@ bool ForwardPropagation::execute()
 			std::cout<<"Dot result Wx: \n"<<Wx_val<<std::endl;
 			}
 
-			Wx_val = Wx_val + (*output_weights_ptr->get_bias_ptr())*VectorXd::Ones(Wx_val.rows());
+			Wx_val = Wx_val + (*output_weights_ptr->get_bias_ptr());
 
 			if(DEBUG_FLAG)
 			{
@@ -149,7 +149,7 @@ bool BackwardPropagation::execute(VectorXd Y)
 									  current_layer->get_input_weights_ptr()->get_weights_mat_ptr()->cols());
 
 
-				double bias_diff;
+				VectorXd bias_diff = VectorXd::Zero(dout_dnet.size());
 
 				VectorXd dcurr_dprev(dout_dnet.size());
 
@@ -157,9 +157,9 @@ bool BackwardPropagation::execute(VectorXd Y)
 				{
 					double etot_dout_sc = dEtot_dout(row);
 					double dout_dnet_sc = dout_dnet(row);
-					dcurr_dprev(row) = etot_dout_sc*dout_dnet_sc;
+					//dcurr_dprev(row) = etot_dout_sc*dout_dnet_sc;
 					weights_grad.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc;
-					bias_diff += etot_dout_sc*dout_dnet_sc;
+					bias_diff(row) += etot_dout_sc*dout_dnet_sc;
 				}
 
 				if(DEBUG_FLAG_BP)

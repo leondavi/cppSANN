@@ -7,6 +7,8 @@
 
 #include "include/Model.h"
 
+#define DEBUG_TRAIN 0
+
 namespace SANN
 {
 	//constructor
@@ -181,8 +183,10 @@ namespace SANN
      */
     double Model::train(MatrixXd data,MatrixXd labels,bool print_loss)
     {
+#if DEBUG_TRAIN
     	std::cout<<"data: \n"<<data<<std::endl;
     	std::cout<<"labels: \n"<<labels<<std::endl;
+#endif
 
     	//set learning rate and loss function to backward propagation
 		bp_.set_params(lr_,loss_func_);
@@ -206,18 +210,21 @@ namespace SANN
     		VectorXd input_data = (data.row(row)).transpose();
     		VectorXd label_data = (labels.row(row)).transpose();
 
+#if DEBUG_TRAIN
         	std::cout<<"input_data: \n"<<input_data<<std::endl;
         	std::cout<<"label_data: \n"<<label_data<<std::endl;
+#endif
 
     		layers_.front()->set_new_val_to_neurons(input_data);
+#if DEBUG_TRAIN
         	std::cout<<"in neurons: \n"<<*(layers_.front()->get_neurons_ptr())<<std::endl;
         	std::cout<<"out neurons: \n"<<*(layers_.back()->get_neurons_ptr())<<std::endl;
-
+#endif
     		fp_.execute();
     		bp_.execute(label_data);
-
+#if DEBUG_TRAIN
         	std::cout<<"out neurons: \n"<<*(layers_.back()->get_neurons_ptr())<<std::endl;
-
+#endif
     		if(print_loss)
     		{
     			std::cout<<"[cppSANN] iteration: "<<row<<" Loss val: "<<bp_.get_error_val()<<std::endl;

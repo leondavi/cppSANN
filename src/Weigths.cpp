@@ -25,16 +25,30 @@ namespace WeightsNormalization
 	}
 }
 
-Weights::Weights(uint32_t rows, uint32_t cols,int val) : bias_(0)
+/**
+ * weights mat default value is val*ones
+ * Bias value default is 0
+ */
+Weights::Weights(uint32_t rows, uint32_t cols,double weights_val,double bias_val)
 {
-	this->weights_mat_= val*MatrixXd::Ones(rows,cols);
+	this->weights_mat_= weights_val*MatrixXd::Ones(rows,cols);
+	this->bias_= bias_val*VectorXd::Ones(rows);
 }
 
-Weights::Weights(uint32_t rows, uint32_t cols,double bias, double mu, double sig)
+Weights::Weights(uint32_t rows, uint32_t cols,bool random_init,double mu, double sig)
 {
-	this->weights_mat_= ExtMath::randn(rows,cols,mu,sig);
-	WeightsNormalization::NormalizedByInputSize(this->weights_mat_);
-	bias_ = bias;
+	if(random_init)
+	{
+		this->weights_mat_= ExtMath::randn(rows,cols,mu,sig);
+		WeightsNormalization::NormalizedByInputSize(this->weights_mat_);
+		this->bias_ =  VectorXd::Zero(rows);
+	}
+	else
+	{
+		this->weights_mat_= mu*MatrixXd::Ones(rows,cols);
+		this->bias_ = VectorXd::Zero(rows);
+	}
 }
+
 
 }

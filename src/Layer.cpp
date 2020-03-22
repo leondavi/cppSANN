@@ -14,7 +14,7 @@ namespace ANN
 //-------- static functions ---------
 
 
-bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer)
+bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer,bool random_init)
 {
 
 	std::shared_ptr<Layer> next_layer_inst = next_layer.lock();
@@ -28,8 +28,10 @@ bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Laye
 		// Creating weights instance
 		// rows ---> Next layer
 		// cols ---> Current Layer
-		// Wx+b where W is NxP and x is Px1 (N-Next layer dimension,P-Previous layer dimension)
-		std::shared_ptr<Weights> weights_ptr = std::make_shared<Weights>(next_layer_inst->get_layer_size(),current_layer_inst->get_layer_size());
+		// Wx+b where W is NxC and x is Cx1 (N-Next layer dimension,C-Current layer dimension)
+		std::shared_ptr<Weights> weights_ptr = std::make_shared<Weights>(next_layer_inst->get_layer_size(),
+																		 current_layer_inst->get_layer_size(),
+																		 random_init);
 
 		next_layer_inst->set_input_weights(weights_ptr);//new weights are the input of next layer
 		current_layer_inst->set_output_weights(weights_ptr);//new weights are the output weights of this layer

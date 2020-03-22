@@ -17,7 +17,7 @@ class Optimizer
 public:
 	virtual ~Optimizer() {};
 
-	virtual void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) = 0; //overwrite weights
+	virtual void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) = 0; //overwrite weights
 };
 /**
  * Stochastic Gradient Descent
@@ -28,13 +28,13 @@ public:
 	/**
 	 * Overwrites Weights with result of gradients change
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
 	//	std::cout<<"in Weights:\n"<<Weights<<std::endl;
 		Weights -= lr*W_grad;
 	//	std::cout<<"out Weights:\n"<<Weights<<std::endl;
 
-		bias -= lr*bias_diff;
+		bias = bias - lr*bias_diff;
 	}
 };
 
@@ -48,17 +48,17 @@ class MiniBatchGradientDescent : public Optimizer
 private:
 	uint32_t batch_size_;
 	uint32_t curr_batch_;
-	double bias_acc_;
+	VectorXd bias_acc_;
 	MatrixXd grad_acc_;//accumulator of gradients
 
 public:
 
 	MiniBatchGradientDescent(uint32_t batch_size = MINI_BATCH_GRADIENT_DEFAULT_BATCH_SIZE) : Optimizer(),
-							batch_size_(batch_size),curr_batch_(0),bias_acc_(0) {};
+							batch_size_(batch_size),curr_batch_(0) {};
 	/**
 	 * Overwrites Weights
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
 		if(curr_batch_ == 0)
 		{
@@ -97,8 +97,8 @@ private:
 	MatrixXd v_p_;
 
 	double gamma_;
-	double v_bias_;
-	double v_p_bias_;
+	VectorXd v_bias_;
+	VectorXd v_p_bias_;
 	bool init;
 
 public:
@@ -110,13 +110,13 @@ public:
 	/**
 	 * Overwrites Weights
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
 		if (init)
 		{
 			v_p_ = Eigen::MatrixXd::Zero(W_grad.rows(),W_grad.cols());
 			v_bias_ = bias_diff;
-			v_p_bias_ = 0;
+			v_p_bias_ = VectorXd::Zero(bias_diff.size());
 			init = false;
 		}
 
@@ -148,8 +148,8 @@ private:
 	MatrixXd v_p_;
 
 	double gamma_;
-	double v_bias_;
-	double v_p_bias_;
+	VectorXd v_bias_;
+	VectorXd v_p_bias_;
 	bool init;
 
 	LossFunctionPtr loss_func_;
@@ -181,13 +181,13 @@ public:
 	/**
 	 * Overwrites Weights
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
 		if (init)
 		{
 			v_p_ = Eigen::MatrixXd::Zero(W_grad.rows(),W_grad.cols());
 			v_bias_ = bias_diff;
-			v_p_bias_ = 0;
+			v_p_bias_ = VectorXd::Zero(bias_diff.size());
 			init = false;
 		}
 
@@ -222,7 +222,7 @@ public:
 	Adagrad(double epsilon = 1e-8) : Optimizer(),epsilon_(epsilon),init(true)
 		{}
 
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
 		if (init)
 		{
@@ -289,7 +289,7 @@ public:
 
 	}
 
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, double &bias, const double bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
 		t_++;
 		b1_pow_t_*=b1_pow_t_;

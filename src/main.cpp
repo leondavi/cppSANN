@@ -18,7 +18,7 @@ int main(int ac, char** av)
 	std::vector<act_t> act_types_vec{act_t::ACT_NONE,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_NONE};
 	SANN::Model model(layers_sizes,0.1);
 	model.set_activations(act_types_vec);
-	model.train(data_mat,label_mat);
+	model.train(data_mat,label_mat,true);
 
 	MatrixXd results = model.predict(data_with_noise);
 	std::cout<<"data with noise: \n"<<data_with_noise<<std::endl;

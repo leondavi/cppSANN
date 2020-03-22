@@ -88,7 +88,7 @@ public:
 
 
 	//---- static functions ----//
-	static bool connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer);
+	static bool connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer,bool random_init = true);
 	static bool connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer,std::shared_ptr<Weights> weights_ptr);
 
 
