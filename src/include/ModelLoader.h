@@ -8,21 +8,31 @@
 #ifndef SRC_INCLUDE_MODELLOADER_H_
 #define SRC_INCLUDE_MODELLOADER_H_
 
-#define FILE_PATH "/home/david/workspace/cppSANN/example_model.sann"
+#define FILE_PATH "/home/david/workspace/cppSANN/example_model.json"
 
 #include <Model.h>
 #include <string>
+#include <unordered_map>
 
 using namespace SANN;
 
-class ModelLoader {
-	std::string model_file_path_;
-
-public:
-	ModelLoader(std::string model_file_path) : model_file_path_(model_file_path) {}
-	virtual ~ModelLoader();
+class ModelLoader
+{
+	struct meta_data_t_
+	{
+		std::vector<int> layer_sizes;
+		std::vector<act_t> activation_layers;
+	};
 
 private:
+	 std::unordered_map<std::string,Model> file_to_model_map_;
+
+public:
+	ModelLoader();
+	virtual ~ModelLoader();
+
+	 void load_file(std::string file_path);
+
 
 
 };

@@ -1,11 +1,15 @@
 
 
 #include "Model.h"
+#include "ModelLoader.h"
+
 
 int main(int ac, char** av);
 /**
  * Examples how to use
  */
+
+
 
 int main(int ac, char** av)
 {
@@ -23,6 +27,9 @@ int main(int ac, char** av)
 	MatrixXd results = model.predict(data_with_noise);
 	std::cout<<"data with noise: \n"<<data_with_noise<<std::endl;
 	std::cout<<"results: \n"<<results<<std::endl;
+
+	ModelLoader ml;
+	ml.load_file(FILE_PATH);
 
 	return 0;
 
