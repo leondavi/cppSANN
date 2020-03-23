@@ -11,7 +11,8 @@ Implementations Include comments and explanation for an easier learning.
 
 1. Eigen library located in default location (or use symbolic link to real location). 
    In ubuntu: ```sudo apt install libeigen3-dev ```
-2. scons build tool: ```sudo apt-get install -y scons```
+2. Boost library: ```sudo apt-get install libboost-all-dev```
+3. scons build tool: ```sudo apt-get install -y scons```
 
 
 
