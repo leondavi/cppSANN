@@ -61,6 +61,7 @@ void ModelLoader::load_file(std::string &file_path,model_data_t_ &mdt)
 		//std::string a = "";
 
 	} catch(...)
+	} catch(...)
 	{
 		std::cout<<"[cppSANN] ModelLoader has got an invalid json file!"<<std::endl;
 	}
@@ -77,6 +78,7 @@ void ModelLoader::generate_weights_vec(ptree &pt,model_data_t_ &mdt)
 	int w = 0;
 	int b = 0;
 	enum {WEIGHTS,BIAS};
+	for (auto &layer : pt.get_child("weights"))
 	for (auto &layer : pt.get_child("weights"))
 	{
 		std::cout<<"Layer: "<<layer.first<<std::endl;
