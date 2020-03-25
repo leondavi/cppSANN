@@ -35,10 +35,20 @@ namespace SANN
 
 	    bool connect_layers();
 
+	    void generate_act_vec(std::vector<Activations::act_t> hidden_activations,
+							 std::vector<ActivationFunctionPtr> &act_ptr_vec_out,
+							 act_t input = ACT_NONE, act_t output = ACT_NONE);
+
 	public:
 
 	    Model(std::vector<uint32_t> model_by_layers_size,
 	    		double learning_rate = DEFAULT_LEARNING_RATE,
+				LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>());
+
+	    Model(std::vector<layer_size_t> model_by_layers_size,
+				std::vector<act_t> activation_layers,
+				std::vector<std::shared_ptr<ANN::Weights>> weights_vec,
+				double learning_rate = DEFAULT_LEARNING_RATE,
 				LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>());
 
 		Model(double learning_rate = DEFAULT_LEARNING_RATE,LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :

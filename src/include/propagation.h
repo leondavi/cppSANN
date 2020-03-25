@@ -12,7 +12,7 @@
 #include "loss_functions.h"
 #include "Layer.h"
 
-#define DEFAULT_LEARNING_RATE 0.01
+#define DEFAULT_LEARNING_RATE 1e-4
 
 namespace ANN
 {

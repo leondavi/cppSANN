@@ -196,6 +196,21 @@ public:
 };
 
 	typedef enum {ACT_NONE,ACT_SIGMOID,ACT_RELU,ACT_LEAKY_RELU,ACT_SWISH,ACT_ELU,ACT_TANH} act_t;
+	static std::vector<std::string> str_to_activation_enum = {"none","sigmoid","relu","leaky_relu","swish","elu","tanh"};
+
+	inline act_t str_to_act_t(std::string act_name)
+	{
+		unsigned int res = ACT_NONE;
+		for(std::string act_str : str_to_activation_enum)
+		{
+			if (act_str == act_name)
+			{
+				return act_t(res);
+			}
+			res++;
+		}
+		return ACT_NONE;
+	}
 
 } //end of Activation namespace
 
@@ -220,6 +235,9 @@ inline ActivationFunctionPtr select_activation(Activations::act_t ActVal)
 
 	return chosen_act;
 }
+
+
+
 
 #define DEFAULT_ACTIVATION_FUNC std::make_shared<Activations::Sigmoid>()
 

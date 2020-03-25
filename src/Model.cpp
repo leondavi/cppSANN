@@ -13,7 +13,7 @@ namespace SANN
 {
 	//constructor
 
-    Model::Model(std::vector<uint32_t> model_by_layers_size,double learning_rate,LossFunctionPtr loss_func):
+    Model::Model(std::vector<layer_size_t> model_by_layers_size,double learning_rate,LossFunctionPtr loss_func):
 				lr_(learning_rate),
 				loss_func_(loss_func),
 				fp_(),
@@ -21,6 +21,45 @@ namespace SANN
 	{
     	set_layers(model_by_layers_size);
 	}
+
+    Model::Model(std::vector<layer_size_t> model_by_layers_size,
+    			std::vector<act_t> activation_layers,
+				std::vector<std::shared_ptr<ANN::Weights>> weights_vec,
+    			double learning_rate,
+				LossFunctionPtr loss_func):
+   				lr_(learning_rate),
+   				loss_func_(loss_func),
+   				fp_(),
+   				bp_(learning_rate,loss_func)
+    {
+		std::vector<ActivationFunctionPtr> act_ptr_vec;
+		generate_act_vec(activation_layers,act_ptr_vec);
+
+//    	// Generate Layers
+//    	for(uint32_t i=0; i < model_by_layers_size.size(); i++)
+//		{
+//			if(i == 0) //input size
+//			{
+//				std::shared_ptr<ANN::InputLayer> input_layer = std::make_shared<ANN::InputLayer>(model_by_layers_size[i],
+//																								 act_ptr_vec[i],
+//																								 std::make_shared<Optimizers::SGD>());
+//				layers_.push_back(input_layer);
+//			}
+//			else if(i == model_by_layers_size.size()-1)//last element is the output size
+//			{
+//				std::shared_ptr<ANN::OutputLayer> output_layer = std::make_shared<ANN::OutputLayer>(model_by_layers_size[i],
+//																									act_ptr_vec[i],
+//																									std::make_shared<Optimizers::Adam>());
+//
+//				layers_.push_back(output_layer);
+//			}
+//			else
+//			{
+//				layers_.push_back(std::make_shared<ANN::Layer>(model_by_layers_size[i],act_ptr_vec[i],std::make_shared<Optimizers::SGD>()));
+//			}
+//		}
+
+    }
 
     /**
      * If model activation isn't given then default initialization is applied
@@ -83,6 +122,27 @@ namespace SANN
 			}
 		}
     }
+
+    void Model::generate_act_vec(std::vector<Activations::act_t> hidden_activations,
+								 std::vector<ActivationFunctionPtr> &act_ptr_vec_out,
+								 act_t input, act_t output)
+	{
+    	act_ptr_vec_out.resize(hidden_activations.size()+2);//+ input and output
+    	// Generate activations
+		for(uint32_t i=0; i < act_ptr_vec_out.size(); i++)
+		{
+			if(i == 0) //input size
+			{
+				act_ptr_vec_out.push_back(select_activation(input));
+			}
+			else if(i == act_ptr_vec_out.size()-1)//last element is the output size
+			{
+				act_ptr_vec_out.push_back(select_activation(output));
+			}
+			act_ptr_vec_out.push_back(select_activation(hidden_activations[i])); // hidden layers
+		}
+	}
+
 
     /**
 	 * Assumes that layers exists
@@ -175,6 +235,26 @@ namespace SANN
 		layers_connected_ = false;
     	return false;
     }
+
+//    bool Model::connect_layers(std::vector<std::shared_ptr<ANN::Weights>> weights_vec)
+//        {
+//        	if (validate_model())
+//        	{
+//
+//        		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
+//        		{
+//        			if((*it)->get_layer_type() != ANN::OUTPUT_LAYER)
+//        			{
+//    					std::list<std::shared_ptr<ANN::Layer>>::iterator next_it = std::next(it,1);
+//    					(*it)->connect_layers(*it,*next_it);
+//        			}
+//        		}
+//        		layers_connected_ = true;
+//        		return true;
+//        	}
+//    		layers_connected_ = false;
+//        	return false;
+//        }
 
     /**
      * Taking data row by row and labels row by row

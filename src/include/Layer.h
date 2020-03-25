@@ -16,6 +16,7 @@
 #include "activation_functions.h"
 #include "optimizers.h"
 
+typedef uint32_t layer_size_t;
 
 using namespace Eigen;
 using namespace Activations;
@@ -30,7 +31,7 @@ enum {NORMAL_LAYER,INPUT_LAYER,OUTPUT_LAYER};
 class Layer : public std::enable_shared_from_this<Layer>
 {
 private:
-	uint32_t layer_size_;
+	layer_size_t layer_size_;
 	VectorXd neurons_; //column vector
 	int layer_type;
 	ActivationFunctionPtr activation_func_ptr_;

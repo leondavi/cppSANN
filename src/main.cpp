@@ -18,7 +18,7 @@ int main(int ac, char** av)
 	MatrixXd data_with_noise = data_mat;
 	data_with_noise += ExtMath::randn(4,8);
 
-	std::vector<uint32_t> layers_sizes{8,4,3,2};
+	std::vector<layer_size_t> layers_sizes{8,4,3,2};
 	std::vector<act_t> act_types_vec{act_t::ACT_NONE,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_NONE};
 	SANN::Model model(layers_sizes,0.1);
 	model.set_activations(act_types_vec);
@@ -29,7 +29,7 @@ int main(int ac, char** av)
 	std::cout<<"results: \n"<<results<<std::endl;
 
 	ModelLoader ml;
-	ml.load_file(FILE_PATH);
+	ml.generate_model_from_file(FILE_PATH);
 
 	return 0;
 
