@@ -39,6 +39,10 @@ namespace SANN
 							 std::vector<ActivationFunctionPtr> &act_ptr_vec_out,
 							 act_t input = ACT_NONE, act_t output = ACT_NONE);
 
+	    bool generate_layers_from_weights(std::vector<std::shared_ptr<ANN::Weights>> weights_vec,
+	       							      std::vector<ActivationFunctionPtr> &act_ptr_vec,
+	   								      Optimizers::opt_t optimizer = Optimizers::OPT_ADAM);
+
 	public:
 
 	    Model(std::vector<uint32_t> model_by_layers_size,
@@ -49,6 +53,7 @@ namespace SANN
 				std::vector<act_t> activation_layers,
 				std::vector<std::shared_ptr<ANN::Weights>> weights_vec,
 				double learning_rate = DEFAULT_LEARNING_RATE,
+				Optimizers::opt_t optimizer = Optimizers::OPT_ADAM,
 				LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>());
 
 		Model(double learning_rate = DEFAULT_LEARNING_RATE,LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :

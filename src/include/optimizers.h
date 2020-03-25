@@ -19,6 +19,16 @@ public:
 
 	virtual void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) = 0; //overwrite weights
 };
+
+class None : public Optimizer
+{
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	{
+		Weights -= W_grad;
+		bias -= bias_diff;
+	}
+
+};
 /**
  * Stochastic Gradient Descent
  */
@@ -37,6 +47,8 @@ public:
 		bias = bias - lr*bias_diff;
 	}
 };
+
+
 
 /**
  * Calculates the mean gradient of the mini-batch
@@ -324,7 +336,7 @@ public:
 
 };
 
-typedef enum {OPT_SGD,OPT_MINI_BATCH_SGD,OPT_MOMENTUM,OPT_NAG,OPT_ADAGRAD,OPT_ADAM} opt_t;
+typedef enum {OPT_NONE,OPT_SGD,OPT_MINI_BATCH_SGD,OPT_MOMENTUM,OPT_NAG,OPT_ADAGRAD,OPT_ADAM} opt_t;
 
 }
 typedef std::shared_ptr<Optimizers::Optimizer> OptimizerPtr ;
@@ -337,6 +349,7 @@ inline OptimizerPtr select_optimizer(Optimizers::opt_t OptVal)
 	OptimizerPtr chosen_opt;
 	switch (OptVal)
 	{
+		case Optimizers::OPT_NONE			: {	chosen_opt = std::make_shared<Optimizers::None>(); break; }
 		case Optimizers::OPT_SGD            : { chosen_opt = std::make_shared<Optimizers::SGD>(); break; }
 		case Optimizers::OPT_MINI_BATCH_SGD : { chosen_opt = std::make_shared<Optimizers::MiniBatchGradientDescent>(); break; }
 		case Optimizers::OPT_MOMENTUM       : { chosen_opt = std::make_shared<Optimizers::Momentum>(); break; }

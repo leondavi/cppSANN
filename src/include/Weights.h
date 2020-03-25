@@ -43,6 +43,9 @@ public:
 
 	MatrixXd* get_weights_mat_ptr() { return &(this->weights_mat_); }
 	VectorXd* get_bias_ptr() { return &(this->bias_); }
+	uint32_t weights_rows() {return this->weights_mat_.rows(); }
+	uint32_t weights_cols() {return this->weights_mat_.cols(); }
+	uint32_t bias_size() {return this->bias_.size(); }
 
 
 	//---- setters ----//

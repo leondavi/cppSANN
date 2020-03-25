@@ -30,10 +30,12 @@ class ModelLoader
 	};
 
 private:
-	 std::unordered_map<std::string,Model> file_to_model_map_;
+
+	 std::shared_ptr<Model> model_ptr_;
 
 	 void generate_weights_vec(ptree &pt,model_data_t_ &mdt);
 	 void load_file(std::string &file_path,model_data_t_ &mdt);
+
 
 public:
 	ModelLoader();
@@ -41,8 +43,7 @@ public:
 
 	 void generate_model_from_file(std::string file_path,double lr = DEFAULT_LEARNING_RATE);
 
-
-
+	 std::shared_ptr<Model> get_model_ptr() { return this->model_ptr_; }
 
 };
 

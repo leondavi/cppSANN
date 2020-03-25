@@ -24,12 +24,7 @@ void ModelLoader::generate_model_from_file(std::string file_path,double lr)
 {
 	model_data_t_ mdt;
 	load_file(file_path,mdt);
-
-	if (mdt.activation_layers.size() == 1)
-	{
-		mdt.activation_layers.reserve(mdt.layer_sizes.size()-2);
-		mdt.activation_layers.front();
-	}
+	this->model_ptr_ = std::make_shared<Model>(mdt.layer_sizes,mdt.activation_layers,mdt.weights_vec);
 }
 
 void ModelLoader::load_file(std::string &file_path,model_data_t_ &mdt)
@@ -42,26 +37,19 @@ void ModelLoader::load_file(std::string &file_path,model_data_t_ &mdt)
 
 		for (auto& elem : pt.get_child("activations"))
 		{
-			std::cout<<elem.second.get_value<std::string>()<<",";
 			mdt.activation_layers.push_back(Activations::str_to_act_t(elem.second.get_value<std::string>()));
 		}
 
-		std::cout<<"dims list ";
 		for (auto& elem : pt.get_child("layers"))
 		{
-			std::cout<<elem.second.get_value<unsigned int>()<<","<<std::endl;
 			mdt.layer_sizes.push_back(elem.second.get_value<unsigned int>());
 		}
 
 		// ---- generate matrices -----//
 		generate_weights_vec(pt,mdt);
-		std::cout<<"loaded"<<std::endl;
-		//std::string layers = pt.get_child("layers").get_value<std::string>();
-		//std::string activations = pt.get<std::string>("activations");
-		//std::string a = "";
 
-	} catch(...)
-	} catch(...)
+	}
+	catch(...)
 	{
 		std::cout<<"[cppSANN] ModelLoader has got an invalid json file!"<<std::endl;
 	}
@@ -79,9 +67,8 @@ void ModelLoader::generate_weights_vec(ptree &pt,model_data_t_ &mdt)
 	int b = 0;
 	enum {WEIGHTS,BIAS};
 	for (auto &layer : pt.get_child("weights"))
-	for (auto &layer : pt.get_child("weights"))
 	{
-		std::cout<<"Layer: "<<layer.first<<std::endl;
+		//std::cout<<"Layer: "<<layer.first<<std::endl;
 		int case_select = (layer.first.find("weight") != std::string::npos) ? WEIGHTS : BIAS;
 		switch (case_select)
 		{
