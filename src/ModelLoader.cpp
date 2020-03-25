@@ -25,11 +25,7 @@ void ModelLoader::generate_model_from_file(std::string file_path,double lr)
 	model_data_t_ mdt;
 	load_file(file_path,mdt);
 
-	if (mdt.activation_layers.size() == 1)
-	{
-		mdt.activation_layers.reserve(mdt.layer_sizes.size()-2);
-		mdt.activation_layers.front();
-	}
+
 }
 
 void ModelLoader::load_file(std::string &file_path,model_data_t_ &mdt)
@@ -60,8 +56,8 @@ void ModelLoader::load_file(std::string &file_path,model_data_t_ &mdt)
 		//std::string activations = pt.get<std::string>("activations");
 		//std::string a = "";
 
-	} catch(...)
-	} catch(...)
+	}
+	catch(...)
 	{
 		std::cout<<"[cppSANN] ModelLoader has got an invalid json file!"<<std::endl;
 	}
@@ -78,7 +74,6 @@ void ModelLoader::generate_weights_vec(ptree &pt,model_data_t_ &mdt)
 	int w = 0;
 	int b = 0;
 	enum {WEIGHTS,BIAS};
-	for (auto &layer : pt.get_child("weights"))
 	for (auto &layer : pt.get_child("weights"))
 	{
 		std::cout<<"Layer: "<<layer.first<<std::endl;

@@ -41,9 +41,6 @@ public:
 
 	 void generate_model_from_file(std::string file_path,double lr = DEFAULT_LEARNING_RATE);
 
-
-
-
 };
 
 
