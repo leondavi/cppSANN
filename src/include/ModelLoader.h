@@ -13,7 +13,11 @@
 #include <Model.h>
 #include <string>
 #include <unordered_map>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <fstream>
 
+using namespace boost::property_tree;
 using namespace SANN;
 
 class ModelLoader
@@ -27,6 +31,8 @@ class ModelLoader
 private:
 	 std::unordered_map<std::string,Model> file_to_model_map_;
 
+	 void generate_weights_vec(ptree &pt,meta_data_t_ &mt,std::vector<std::shared_ptr<ANN::Weights>> &vec_of_weights);
+
 public:
 	ModelLoader();
 	virtual ~ModelLoader();
@@ -36,5 +42,6 @@ public:
 
 
 };
+
 
 #endif /* SRC_INCLUDE_MODELLOADER_H_ */
