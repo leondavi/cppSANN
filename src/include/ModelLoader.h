@@ -8,7 +8,7 @@
 #ifndef SRC_INCLUDE_MODELLOADER_H_
 #define SRC_INCLUDE_MODELLOADER_H_
 
-#define FILE_PATH "/home/david/workspace/cppSANN/example_model.json"
+#define FILE_PATH "example_model.json"
 
 #include <Model.h>
 #include <string>
