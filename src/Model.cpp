@@ -219,7 +219,7 @@ namespace SANN
 	}
 
 	/**
-	 * Returns vector of neurons for each layer in model
+	 * Returns a vector of neurons vectors copies for each layer in model
 	 */
 	std::vector<VectorXd> Model::get_neurons_of_model()
 	{
@@ -230,6 +230,20 @@ namespace SANN
 		}
 		return vec_of_layers_of_neurons;
 	}
+
+	/**
+	 * Get activation ids of each layer
+	 */
+	std::vector<act_t> Model::get_activations_types_of_model()
+	{
+		std::vector<act_t> vec_of_activations;
+		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
+		{
+			vec_of_activations.push_back((*it)->get_activation_func_ptr()->act_type());
+		}
+		return vec_of_activations;
+	}
+
 
 
     bool Model::connect_layers()

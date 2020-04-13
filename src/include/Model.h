@@ -90,8 +90,9 @@ namespace SANN
 
 		std::vector<std::shared_ptr<ANN::Weights>> get_weights_of_model();
 		std::vector<VectorXd> get_neurons_of_model();
-
-		void load_weights_of_model(std::string path);//TODO
+		std::vector<act_t> get_activations_types_of_model();
+		inline double get_lr() { return this->lr_; }
+		inline LossFunctions::loss_t get_loss() { return this->loss_func_->loss_type(); }
 
 		void save_model_to_file();//TODO
 		void load_model_from_file();//TODO

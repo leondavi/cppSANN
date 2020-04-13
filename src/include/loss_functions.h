@@ -10,6 +10,9 @@ using namespace Eigen;
 namespace LossFunctions
 {
 
+typedef enum {LOSS_CROSS_ENTROPY,LOSS_MSE} loss_t;
+
+
 	class Loss
 	{
 	public:
@@ -18,6 +21,8 @@ namespace LossFunctions
 
 		virtual VectorXd func(VectorXd &y, VectorXd &y_pred) = 0;
 		virtual VectorXd derivative(VectorXd &y, VectorXd &y_pred) = 0;
+
+		virtual loss_t loss_type() = 0;
 
 	};
 
@@ -42,6 +47,11 @@ namespace LossFunctions
 			VectorXd res;
 			return res;
 		}
+
+		loss_t loss_type()
+		{
+			return LOSS_CROSS_ENTROPY;
+		}
 	};
 
 	class MSELoss : public Loss
@@ -58,11 +68,30 @@ namespace LossFunctions
 			return y_pred - y;
 		}
 
-
-
+		loss_t loss_type()
+		{
+			return LOSS_MSE;
+		}
 	};
 
 }
 
 typedef std::shared_ptr<LossFunctions::Loss> LossFunctionPtr ;
+
+
+/**
+ * Select loss function by enum in LossFunctions::loss_t
+ */
+inline LossFunctionPtr select_loss_function(LossFunctions::loss_t lossVal)
+{
+	LossFunctionPtr chosen_loss_function;
+	switch (lossVal)
+	{
+		case LossFunctions::LOSS_CROSS_ENTROPY : { chosen_loss_function = std::make_shared<LossFunctions::CrossEntropy>(); break; }
+		case LossFunctions::LOSS_MSE      	   : { chosen_loss_function = std::make_shared<LossFunctions::MSELoss>(); break; }
+	}
+
+	return chosen_loss_function;
+}
+
 

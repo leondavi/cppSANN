@@ -6,6 +6,7 @@
 
 namespace Activations
 {
+typedef enum {ACT_NONE,ACT_SIGMOID,ACT_RELU,ACT_LEAKY_RELU,ACT_SWISH,ACT_ELU,ACT_TANH} act_t;
 
 typedef std::function<double(double)> t_activation_func;
 
@@ -14,6 +15,7 @@ class ActivationFunction
 public:
 	virtual double function(double x) = 0;
 	virtual double function_derivative(double x) = 0; //first derivative of function
+	virtual act_t act_type() = 0;
 
 	virtual ~ActivationFunction() {}
 
@@ -48,6 +50,11 @@ public:
 		double sigmoid_x = function(x);
 		return sigmoid_x*(1-sigmoid_x);
 	}
+
+	inline act_t act_type()
+	{
+		return ACT_SIGMOID;
+	}
 };
 
 /**
@@ -70,6 +77,11 @@ public:
 	{
 		double sigmoid_x = sigmoid_.function(x);
 		return B_*(sigmoid_x+x*sigmoid_x*(1-sigmoid_x));
+	}
+
+	inline act_t act_type()
+	{
+		return ACT_SWISH;
 	}
 
 	Swish(double b = 1) : B_(b) {};
@@ -99,6 +111,11 @@ public:
 	{
 		return x>0 ? 1 : 0;
 	}
+
+	inline act_t act_type()
+	{
+		return ACT_RELU;
+	}
 };
 
 
@@ -116,6 +133,11 @@ public:
 	inline double function_derivative(double x)
 	{
 		return x > 0 ? 1 : a_;
+	}
+
+	inline act_t act_type()
+	{
+		return ACT_LEAKY_RELU;
 	}
 
 	LeakyReLU(double a = 0.1) : a_(a) {};
@@ -149,6 +171,12 @@ public:
 		return x > 0 ? 1 : a_*exp(x);
 	}
 
+	inline act_t act_type()
+	{
+		return ACT_ELU;
+	}
+
+
 	ELU(double a = 0.1) : a_(a) {};
 };
 
@@ -176,6 +204,12 @@ public:
 		double r = tanh(x);
 		return 1-r*r;
 	}
+
+	inline act_t act_type()
+	{
+		return ACT_TANH;
+	}
+
 };
 
 /**
@@ -193,9 +227,13 @@ public:
 	{
 		return 1;
 	}
+
+	inline act_t act_type()
+	{
+		return ACT_NONE;
+	}
 };
 
-	typedef enum {ACT_NONE,ACT_SIGMOID,ACT_RELU,ACT_LEAKY_RELU,ACT_SWISH,ACT_ELU,ACT_TANH} act_t;
 	static std::vector<std::string> str_to_activation_enum = {"none","sigmoid","relu","leaky_relu","swish","elu","tanh"};
 
 	inline act_t str_to_act_t(std::string act_name)
@@ -217,7 +255,7 @@ public:
 typedef std::shared_ptr<Activations::ActivationFunction> ActivationFunctionPtr;
 
 /**
- * Select actiation by enum in Optimizers::opt_t
+ * Select activation by an enum  from Activations::act_t
  */
 inline ActivationFunctionPtr select_activation(Activations::act_t ActVal)
 {
@@ -230,7 +268,7 @@ inline ActivationFunctionPtr select_activation(Activations::act_t ActVal)
 		case Activations::ACT_LEAKY_RELU   : { chosen_act = std::make_shared<Activations::LeakyReLU>(); break; }
 		case Activations::ACT_SWISH        : { chosen_act = std::make_shared<Activations::Swish>(); break; }
 		case Activations::ACT_ELU          : { chosen_act = std::make_shared<Activations::ELU>(); break; }
-		case Activations::ACT_TANH          : { chosen_act = std::make_shared<Activations::Tanh>(); break; }
+		case Activations::ACT_TANH         : { chosen_act = std::make_shared<Activations::Tanh>(); break; }
 	}
 
 	return chosen_act;
