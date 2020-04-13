@@ -10,7 +10,7 @@
 
 #define FILE_PATH "example_model.json"
 
-#include "ModelLoader.h"
+#include "Model.h"
 #include <string>
 #include <unordered_map>
 #include <boost/property_tree/ptree.hpp>
