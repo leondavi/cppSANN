@@ -45,7 +45,6 @@ for subdir, dirnames, filenames in os.walk(src_dir):
 			if subdir not in cpp_files:
 				cpp_files[subdir] = []
 			cpp_files[subdir].append(filename)
-
 objects_list = []
 
 for subdir in cpp_files:
