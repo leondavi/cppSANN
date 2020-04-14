@@ -13,8 +13,6 @@ build_dir = os.path.join(project_dir,'build')
 src_dir = os.path.join(project_dir,'src')
 
 
-
-
 # Set our required libraries
 libraries 		= []
 library_paths 	= ''
