@@ -1,6 +1,6 @@
 Still in development 
 
-# cppSANN
+# cppSANN - An Eigen based Neural Network Library 
 
 This library is a simple implementation of artificial neural network.
 It doesn't use logger or complex things in order to achieve an easy integration with other 
