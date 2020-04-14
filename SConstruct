@@ -49,8 +49,8 @@ objects_list = []
 
 for subdir in cpp_files:
 	matches = cpp_files[subdir]
-	if "main.cpp" in matches:
-		matches.insert(0, matches.pop(matches.index("main.cpp")))	
+	if "test.cpp" in matches:
+		matches.insert(0, matches.pop(matches.index("test.cpp")))	
 	
 	for elem in matches:
 		objects_list.append(env.Object(os.path.join(subdir,elem)))
