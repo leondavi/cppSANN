@@ -14,8 +14,6 @@ Implementations Include comments and explanation for an easier learning.
 2. Boost library: ```sudo apt-get install libboost-all-dev```
 3. scons build tool: ```sudo apt-get install -y scons```
 
-
-
 ### Build Clean and Run Examples:
 
 1. Build by running: ```scons``` in main directory. 
