@@ -1,59 +1,37 @@
 
 
-#include "Model.h"
-#include "ModelLoader.h"
 
+#include "tests/default_test.h"
+#include <cerrno>
 
-int main(int ac, char** av);
-/**
- * Examples how to use
- */
+std::vector<std::string> test_type = {"Default","Autoencoder"};
+enum {DEFAULT_TEST,AUTOENCODER_TEST};
 
-
-
-int main(int ac, char** av)
+int main(int argc, char * argv[])
 {
-	MatrixXd data_mat(10,8); data_mat << 1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0,
-										1,2,3,8,3,2,1,0;
-	MatrixXd label_mat(10,2); label_mat <<0,1,
-										  0,1,
-										  0,1,
-										  0,1,
-										  0,1,
-										  0,1,
-										  0,1,
-										  0,1,
-										  0,1,
-										  0,1;
-	MatrixXd data_with_noise = data_mat;
-	data_with_noise += ExtMath::randn(10,8);
+	uint32_t test_case = 0;
+	if(argc>1)
+	{
+		std::string input(argv[1]);
+		for(uint32_t i=0; i<test_type.size(); i++)
+		{
+			if (input == test_type[i])
+			{
+				test_case = i;
+			}
+		}
+	}
 
-	std::vector<uint32_t> layers_sizes{8,4,3,2};
-	std::vector<act_t> act_types_vec{act_t::ACT_NONE,act_t::ACT_ELU,act_t::ACT_ELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_NONE};
-	SANN::Model model(layers_sizes,0.1);
-	model.set_activations(act_types_vec);
-	model.train(data_mat,label_mat,true);
+	std::cout<<"Running "<<test_type[test_case]<<" test"<<std::endl;
 
-	MatrixXd results = model.predict(data_with_noise);
-	std::cout<<"data with noise: \n"<<data_with_noise<<std::endl;
-	std::cout<<"results: \n"<<results<<std::endl;
 
-	ModelLoader ml;
-	ml.generate_model_from_file(FILE_PATH);
-	std::shared_ptr<Model> loaded_model = ml.get_model_ptr();
 
-	std::cout<<"Loaded model: "<<loaded_model->get_list_of_layers().front()->get_layer_size()<<std::endl;
+	switch(test_case)
+	{
+		case DEFAULT_TEST: { return deafault_test(); }
+		case AUTOENCODER_TEST: { return 0; }
+	}
 
-	std::cout<<"Done"<<std::endl;
-
-	return 0;
+	return EINVAL;
 
 }

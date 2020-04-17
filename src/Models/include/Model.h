@@ -8,12 +8,12 @@
 #ifndef SRC_INCLUDE_MODEL_H_
 #define SRC_INCLUDE_MODEL_H_
 
-
-#include "propagation.h"
 #include <list>
 #include <string>
 #include <vector>
 
+#include "propagation.h"
+#include "ModelLoader.h"
 
 namespace SANN
 {
@@ -22,7 +22,7 @@ namespace SANN
 	 */
 	class Model
 	{
-	private:
+	protected:
 
 	    double lr_;
 	    std::list<std::shared_ptr<ANN::Layer>> layers_;
@@ -49,9 +49,9 @@ namespace SANN
 	    		double learning_rate = DEFAULT_LEARNING_RATE,
 				LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>());
 
-	    Model(std::vector<layer_size_t> model_by_layers_size,
-				std::vector<act_t> activation_layers,
-				std::vector<std::shared_ptr<ANN::Weights>> weights_vec,
+	    Model(std::vector<layer_size_t> model_by_layers_size, //layer sizes
+				std::vector<act_t> activation_layers, //activation type includes input and output (None is an option)
+				std::vector<std::shared_ptr<ANN::Weights>> weights_vec, // Shared pointer to weights type
 				double learning_rate = DEFAULT_LEARNING_RATE,
 				Optimizers::opt_t optimizer = Optimizers::OPT_ADAM,
 				LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>());
@@ -59,7 +59,8 @@ namespace SANN
 		Model(double learning_rate = DEFAULT_LEARNING_RATE,LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
 			lr_(learning_rate),loss_func_(loss_func),fp_(),bp_(learning_rate,loss_func),layers_connected_(false)
 	    {}
-		Model(std::list<std::shared_ptr<ANN::Layer>> layers,
+
+		Model(std::list<std::shared_ptr<ANN::Layer>> layers,//layers with their weights
 			  double learning_rate = DEFAULT_LEARNING_RATE,
 			  LossFunctionPtr loss_func = std::make_shared<LossFunctions::MSELoss>()) :
 			  lr_(learning_rate),
@@ -78,7 +79,6 @@ namespace SANN
 		virtual double train(MatrixXd data,MatrixXd labels,bool print_loss = false); //return value of final loss
 	    MatrixXd predict(MatrixXd data); //returns the predictions - each row is a single prediction
 
-
 		//setters
 	    void set_layers(std::vector<uint32_t> model_by_layers_size,std::vector<Activations::act_t> model_activations = std::vector<Activations::act_t>());
 	    void set_activations(std::vector<Activations::act_t> model_activations = std::vector<Activations::act_t>());
@@ -95,39 +95,20 @@ namespace SANN
 		inline LossFunctions::loss_t get_loss() { return this->loss_func_->loss_type(); }
 
 		void save_model_to_file();//TODO
-		void load_model_from_file();//TODO
 
-	};
-
-	class Autoencoder : public Model
-	{
-	private:
-
-	public:
-		Autoencoder(double learning_rate = DEFAULT_LEARNING_RATE) : Model(learning_rate) {};
-		Autoencoder(std::vector<uint32_t> model_by_layers_size,
-				    double learning_rate = DEFAULT_LEARNING_RATE,
-				    std::vector<Activations::act_t> model_activations = std::vector<Activations::act_t>()) : Model(learning_rate)
-		            {
-						set_layers(model_by_layers_size,model_activations);
-		            };
-
-
-		bool validate_model() override { return (get_list_of_layers().size() >= 3) &&
-												(get_list_of_layers().front()->get_layer_size() == get_list_of_layers().back()->get_layer_size());}
-
-	};
-
-	class CustomModel : public Model
-	{
-		private:
-
-		public:
-			CustomModel(std::list<std::shared_ptr<ANN::Layer>> list_of_layers, double learning_rate = DEFAULT_LEARNING_RATE) :
-				        Model(list_of_layers,learning_rate) {}
+		template<class M>
+		static void load_model_from_file(std::string model_json_file,std::shared_ptr<M> &model,double lr = DEFAULT_LEARNING_RATE)
+		{
+			ModelLoader mloader;
+			ModelLoader::model_data_t_ mdt;
+			mloader.generate_model_data_from_file(model_json_file,mdt);
+			model = std::make_shared<M>(mdt.layer_sizes,mdt.activation_layers,mdt.weights_vec);
+		}
 
 	};
 
 }
+
+
 
 #endif /* SRC_INCLUDE_MODEL_H_ */

@@ -5,6 +5,8 @@ def printinfo(text):
 
 if os.path.isfile(".sconsign.dblite"):
 	os.remove(".sconsign.dblite")
+
+MAIN_FILE = "test.cpp"
 	
 printinfo("cwd: "+os.getcwd())
 
@@ -49,11 +51,10 @@ objects_list = []
 
 for subdir in cpp_files:
 	matches = cpp_files[subdir]
-	if "test.cpp" in matches:
+	if MAIN_FILE in matches:
 		matches.insert(0, matches.pop(matches.index("test.cpp")))	
 	
 	for elem in matches:
 		objects_list.append(env.Object(os.path.join(subdir,elem)))
 
 env.Program(os.path.join(build_dir,"cppSANN_exec"), objects_list)
-
