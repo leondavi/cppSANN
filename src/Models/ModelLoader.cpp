@@ -7,7 +7,8 @@
 
 #include "include/ModelLoader.h"
 
-
+namespace SANN
+{
 
 ModelLoader::ModelLoader() {
 	// TODO Auto-generated constructor stub
@@ -20,11 +21,9 @@ ModelLoader::~ModelLoader() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelLoader::generate_model_from_file(std::string file_path,double lr)
+void ModelLoader::generate_model_data_from_file(std::string file_path,model_data_t_ &model_data)
 {
-	model_data_t_ mdt;
-	load_file(file_path,mdt);
-	this->model_ptr_ = std::make_shared<Model>(mdt.layer_sizes,mdt.activation_layers,mdt.weights_vec);
+	load_file(file_path,model_data);
 }
 
 void ModelLoader::load_file(std::string &file_path,model_data_t_ &mdt)
@@ -110,4 +109,6 @@ void ModelLoader::generate_weights_vec(ptree &pt,model_data_t_ &mdt)
 	{
 		mdt.weights_vec[i] = std::make_shared<ANN::Weights>(weights_vec[i],bias_vec[i]);
 	}
+}
+
 }

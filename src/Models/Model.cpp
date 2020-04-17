@@ -20,6 +20,7 @@ namespace SANN
 				bp_(learning_rate,loss_func)
 	{
     	set_layers(model_by_layers_size);
+    	connect_layers();
 	}
 
     Model::Model(std::vector<layer_size_t> model_by_layers_size,
@@ -35,36 +36,28 @@ namespace SANN
     {
 		std::vector<ActivationFunctionPtr> act_ptr_vec;
 		generate_act_vec(activation_layers,act_ptr_vec);
-		if(!generate_layers_from_weights(weights_vec,act_ptr_vec))
+		if(!generate_layers_from_weights(weights_vec,act_ptr_vec))//also connects the layers
 		{
 			std::cout<<"[cppSANN] Model wasn't loaded - Can't connect layers!"<<std::endl;
 		}
     }
 
     /**
-     * If model activation isn't given then default initialization is applied
+     * If model activation isn't given then apply default initialization
      */
     void Model::set_layers(std::vector<uint32_t> model_by_layers_size,std::vector<Activations::act_t> model_activations)
     {
    	    layers_.clear();
 		std::vector<ActivationFunctionPtr> act_ptr_vec;
-    	if(model_activations.empty())
+    	if(model_activations.empty()) //default activations
     	{
-    		model_activations.assign(model_by_layers_size.size()-2,ACT_LEAKY_RELU);
+    		model_activations.assign(model_by_layers_size.size()-2,ACT_LEAKY_RELU); //don't put activations to input and output layers
     		generate_act_vec(model_activations,act_ptr_vec);
     	}
     	else //activations were given
     	{
     		for(uint32_t i=0; i < model_by_layers_size.size(); i++)
 			{
-				if(i == 0) //input size
-				{
-					act_ptr_vec.push_back(select_activation(model_activations[i]));
-				}
-				else if(i == model_by_layers_size.size()-1)//last element is the output size
-				{
-					act_ptr_vec.push_back(select_activation(model_activations[i]));
-				}
 				act_ptr_vec.push_back(select_activation(model_activations[i]));
 			}
     	}
@@ -248,9 +241,8 @@ namespace SANN
 
     bool Model::connect_layers()
     {
-    	if (validate_model())
+    	if (validate_model() && !layers_connected_)
     	{
-
     		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
     		{
     			if((*it)->get_layer_type() != ANN::OUTPUT_LAYER)
@@ -286,9 +278,9 @@ namespace SANN
 		fp_.set_input_layer(layers_.front());
 		bp_.set_output_layer(layers_.back());
 
-    	if(layers_connected_ == false)
+    	if(!layers_connected_)
     	{
-    		connect_layers();
+    		throw "Cannot train - Layers are not connected";
     	}
     	if((data.cols() != layers_.front()->get_layer_size()) ||
     	   (labels.cols() != layers_.back()->get_layer_size()))
@@ -331,9 +323,9 @@ namespace SANN
     MatrixXd Model::predict(MatrixXd data)
     {
     	MatrixXd prediction(data.rows(),layers_.back()->get_layer_size());
-		if(layers_connected_ == false)
+    	if(!layers_connected_)
 		{
-			connect_layers();
+			throw "Cannot predict - Layers are not connected";
 		}
 		for (uint32_t row = 0; row < data.rows(); row++)
 		{
@@ -345,7 +337,6 @@ namespace SANN
 		}
 		return prediction;
     }
-
 
 }
 
