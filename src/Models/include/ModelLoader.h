@@ -8,15 +8,14 @@
 #ifndef SRC_INCLUDE_MODELLOADER_H_
 #define SRC_INCLUDE_MODELLOADER_H_
 
-#define FILE_PATH "example_model.json"
-
 #include <string>
 #include <unordered_map>
 #include <fstream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <Layer.h>
-#include <activation_functions.h>
+
+#include "../../include/Layer.h"
+#include "../../include/activation_functions.h"
 
 using namespace boost::property_tree;
 
