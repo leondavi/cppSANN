@@ -140,7 +140,7 @@ public:
 		return ACT_LEAKY_RELU;
 	}
 
-	LeakyReLU(double a = 0.1) : a_(a) {};
+	LeakyReLU(double a = 0.05) : a_(a) {};
 
 };
 
@@ -177,7 +177,7 @@ public:
 	}
 
 
-	ELU(double a = 0.1) : a_(a) {};
+	ELU(double a = 0.05) : a_(a) {};
 };
 
 /**

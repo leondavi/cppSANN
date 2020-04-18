@@ -65,7 +65,7 @@ typedef enum {LOSS_CROSS_ENTROPY,LOSS_MSE} loss_t;
 		}
 		inline VectorXd derivative(VectorXd &y_pred,VectorXd &y) override
 		{
-			return y_pred - y;
+			return y_pred -y; //Output - Target
 		}
 
 		loss_t loss_type()
