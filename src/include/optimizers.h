@@ -3,6 +3,7 @@
 #include <eigen3/Eigen/Eigen>
 #include "loss_functions.h"
 #include <iostream>
+#include <deque>
 
 #define MINI_BATCH_GRADIENT_DEFAULT_BATCH_SIZE 50
 #define MOMENTUM_DEFAULT_GAMMA_VAL 0.9
@@ -267,71 +268,97 @@ public:
 };
 
 /**
- * mt = b1*m_former_t+(1-b1)*gt   Calculating moving average, gt is the gradient, mt is first moment
- * vt = b2*v_former_t+(1-b2)*gt^2  Calculating moving average, gt^2 is the squared gradient, mt is second moment
+ *
+ * Adam optimizer - based on an article:
+ * A Method for stochastic optimization by Diederik P. Kingma and Jimmy Lei Ba (2015)
+ *
  */
 class Adam : public Optimizer
 {
 private:
 
-	double lr_; //learning rate
-
 	double b1_; //hyper param beta 1
 	double b2_; //hyper param beta 2
-	double b1_pow_t_;
-	double b2_pow_t_;
 
 	double epsilon_;
-	bool init_;
 
-	uint64_t t_; //current time
+	uint history_max_size_;
+	double D_;//convergence difference between former and current weights
 
-	MatrixXd mt_; //first moment estimate of gradient (biased)
-	MatrixXd vt_; //second moment estimate of gradient (biased)
-	MatrixXd mt_former_; //moving average of mean - former iteration result
-	MatrixXd vt_former_; //moving average of the second moment - former iteration result
 
+	std::deque<MatrixXd> former_squared_gradients; //stores former calculations of squared gradients
+	std::deque<MatrixXd> former_gradients; //stores former calculation of gradients
 
 public:
 
-	Adam(double lr = 0.01, double b1 = 0.9,double b2 = 0.999,double eps = 1e-8) : Optimizer() , lr_(lr), b1_(b1) ,b2_(b2),
-																			  b1_pow_t_(b1), b2_pow_t_(b2),epsilon_(eps),
-																			  init_(false),t_(0)
+	Adam(double b1 = 0.9,double b2 = 0.999,double eps = 1e-8,uint history_max_size = 200,double D = 1e-4) : Optimizer() ,
+																			  b1_(b1) ,b2_(b2),
+																			  epsilon_(eps),
+																			  history_max_size_(history_max_size),
+																			  D_(D)
 	{
 
 	}
 
+	// D is the difference value of convergence
+	bool not_converged(MatrixXd &matrixA,MatrixXd &matrixB,double D)
+	{
+		return (matrixA.array()*matrixA.array()-matrixB.array()*matrixB.array()).sum() < D;
+	}
+
 	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
 	{
-		t_++;
-		b1_pow_t_*=b1_pow_t_;
-		b2_pow_t_*=b2_pow_t_;
-
-		if (!init_)
-		{
-			mt_ = MatrixXd::Zero(W_grad.rows(),W_grad.cols());
-			vt_ = MatrixXd::Zero(W_grad.rows(),W_grad.cols());
-			mt_former_ = MatrixXd::Zero(W_grad.rows(),W_grad.cols());
-			vt_former_ = MatrixXd::Zero(W_grad.rows(),W_grad.cols());
-			init_ = true;
-		}
-
+		former_gradients.push_back(W_grad);
 		MatrixXd grad_squared;
 		grad_squared = W_grad.array()*W_grad.array();
+		former_squared_gradients.push_back(grad_squared);
+		while (former_gradients.size()>this->history_max_size_)
+		{
+			former_gradients.pop_front();
+		}
+		while (former_squared_gradients.size() > this->history_max_size_)
+		{
+			former_squared_gradients.pop_front();
+		}
 
-		mt_ = b1_*mt_former_ +  (1-b1_)*W_grad;
-		vt_ = b2_*vt_former_ +  (1-b2_)*grad_squared;
+
+		//initalizations
+		MatrixXd Weigths_t_old;
+		MatrixXd Weigths_t = Weights;
+		MatrixXd *grad_t_p,*grad_squared_t_p;
+
+		int t=former_gradients.size()-1;
+
+		MatrixXd mt = MatrixXd::Zero(W_grad.rows(),W_grad.cols()); //initialization of 1st moment
+		MatrixXd vt = MatrixXd::Zero(W_grad.rows(),W_grad.cols()); //initialization of 2nd moment
+
+		double b1_pow_t = b1_;
+		double b2_pow_t = b2_;
 
 		MatrixXd mt_bc; // Bias-corrected first moment estimate
 		MatrixXd vt_bc_sqr; // Bias-corrected second moment estimate
 
-		mt_bc = mt_/(1-b1_pow_t_);
-		vt_bc_sqr = (vt_/(1-b2_pow_t_)).cwiseSqrt();
+		do{
+			grad_t_p = &former_gradients[t];
+			grad_squared_t_p = &former_squared_gradients[t];
 
-		Weights = Weights - (MatrixXd)(lr_*mt_bc.array()/(vt_bc_sqr.array()+epsilon_));
+			mt = b1_*mt + (1-b1_)*(*grad_t_p);
+			vt = b2_*vt + (1-b2_)*(*grad_squared_t_p);
 
-		mt_former_ = mt_;
-		vt_former_ = vt_;
+			b1_pow_t*=b1_pow_t;
+			b2_pow_t*=b2_pow_t;
+
+			mt_bc = mt/(1-b1_pow_t);//bias corrected first moment estimate
+			vt_bc_sqr = (vt/(1-b2_pow_t)).cwiseSqrt(); //bias corrected second raw moment estimated
+
+			Weigths_t_old = Weigths_t;
+			Weigths_t = Weigths_t - (MatrixXd)(lr*mt_bc.array()/(vt_bc_sqr.array()+epsilon_));
+
+			t--;
+		} while((not_converged(Weigths_t,Weigths_t_old,D_)) && (t >= 0));
+
+		Weights = Weigths_t;
+		bias = bias - lr*bias_diff;
 	}
 
 };

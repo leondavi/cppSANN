@@ -15,6 +15,8 @@
 #include "../../include/propagation.h"
 #include "ModelLoader.h"
 
+#define DEFAULT_OPTIMIZER_OUTPUT_SET -1
+
 namespace SANN
 {
 	/**
@@ -85,7 +87,7 @@ namespace SANN
 	    void set_activations_hidden_only(std::vector<Activations::act_t> model_activations);
 
 		void set_learning_rate(double learning_rate) {this->lr_ = learning_rate; }
-		void set_optimizer(Optimizers::opt_t opt_val,int layer_idx = -1);
+		void set_optimizer(Optimizers::opt_t opt_val,int layer_idx = DEFAULT_OPTIMIZER_OUTPUT_SET);
 
 
 		std::vector<std::shared_ptr<ANN::Weights>> get_weights_of_model();

@@ -2,6 +2,7 @@
 
 
 #include "tests/default_test.h"
+#include "tests/autoencoder_test.h"
 #include <cerrno>
 
 std::vector<std::string> test_type = {"Default","Autoencoder"};
@@ -29,7 +30,7 @@ int main(int argc, char * argv[])
 	switch(test_case)
 	{
 		case DEFAULT_TEST: { return deafault_test(); }
-		case AUTOENCODER_TEST: { return 0; }
+		case AUTOENCODER_TEST: { return ae_test(); }
 	}
 
 	return EINVAL;

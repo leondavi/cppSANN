@@ -26,7 +26,7 @@ namespace WeightsNormalization
 }
 
 /**
- * weights mat default value is val*ones
+ * weights mat default value is 1
  * Bias value default is 0
  */
 Weights::Weights(uint32_t rows, uint32_t cols,double weights_val,double bias_val)

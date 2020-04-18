@@ -116,7 +116,7 @@ bool BackwardPropagation::execute(VectorXd Y)
 		{
 			std::cout<<"error: "<<error_<<std::endl;
 		}
-		VectorXd dEtot_dout = this->loss_func_->derivative(*(current_layer->get_neurons_ptr()),Y);
+		VectorXd dEtot_dout = this->loss_func_->derivative(*(current_layer->get_neurons_ptr()),Y);//delta between total error to neuron's out
 
 		int l = 0;
 
@@ -126,6 +126,7 @@ bool BackwardPropagation::execute(VectorXd Y)
 			{
 				std::cout<<"Layer: "<<l<<"\n==========================\n";
 			}
+			//dout_dnet - the delta between the output of neurons and its activation function (the derivative of activation function)
 			VectorXd dout_dnet = current_layer->get_neurons_ptr()->unaryExpr(current_layer->get_activation_func_ptr()->get_Dfunc());
 
 			previous_layer = current_layer->get_previous_layer_ptr().lock();
@@ -151,15 +152,12 @@ bool BackwardPropagation::execute(VectorXd Y)
 
 				VectorXd bias_diff = VectorXd::Zero(dout_dnet.size());
 
-				VectorXd dcurr_dprev(dout_dnet.size());
-
 				for (uint32_t row = 0; row < weights_grad.rows(); row++)
 				{
 					double etot_dout_sc = dEtot_dout(row);
 					double dout_dnet_sc = dout_dnet(row);
-					//dcurr_dprev(row) = etot_dout_sc*dout_dnet_sc;
 					weights_grad.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc;
-					bias_diff(row) += etot_dout_sc*dout_dnet_sc;
+					bias_diff(row) = etot_dout_sc*dout_dnet_sc;//bias diff from neurons calculation of delta
 				}
 
 				if(DEBUG_FLAG_BP)
@@ -168,8 +166,6 @@ bool BackwardPropagation::execute(VectorXd Y)
 				std::cout<<"weights_mat: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr())<<std::endl;
 						}
 
-				current_layer->get_optimizer()->optimize(*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr()),weights_grad,
-														 *(current_layer->get_input_weights_ptr()->get_bias_ptr()),bias_diff,lr_);
 
 
 				if(DEBUG_FLAG_BP)
@@ -177,17 +173,23 @@ bool BackwardPropagation::execute(VectorXd Y)
 					std::cout<<"weights_mat after optimize: \n"<<*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr())<<std::endl;
 				}
 
-				current_layer = previous_layer;
+				//calculating the delta of Eout with respect to out of hidden
+				//dEo/dOutHidden = Etot_dout*dout_dnet*dnet_doutHidden
+				//dnet/doutHidden = the attribute of weight which W
 
-				if(DEBUG_FLAG_BP)
-						{
-				std::cout<<"dcurr_dprev\n"<<dcurr_dprev<<std::endl;
-						}
-				dEtot_dout = current_layer->get_output_weights_ptr()->get_weights_mat_ptr()->transpose()*dcurr_dprev;
+				VectorXd Etot_dout_times_dout_dnet = dEtot_dout.array()*dout_dnet.array();
+
+				//dnet_douth - delta between network of current weights and hidden of former is actually the weights
+				dEtot_dout = current_layer->get_input_weights_ptr()->get_weights_mat_ptr()->transpose()*Etot_dout_times_dout_dnet;
 				if(DEBUG_FLAG_BP)
 						{
 				std::cout<<"dEtot_dout\n"<<dEtot_dout<<std::endl;
 						}
+
+				current_layer->get_optimizer()->optimize(*(current_layer->get_input_weights_ptr()->get_weights_mat_ptr()),weights_grad,
+																		 *(current_layer->get_input_weights_ptr()->get_bias_ptr()),bias_diff,lr_);
+
+				current_layer = previous_layer;
 
 				l++;
 			}
