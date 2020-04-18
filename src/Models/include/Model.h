@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#include "propagation.h"
+#include "../../include/propagation.h"
 #include "ModelLoader.h"
 
 namespace SANN
