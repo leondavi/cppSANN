@@ -225,7 +225,7 @@ public:
 
 	inline double function_derivative(double x)
 	{
-		return 1;
+		return 1.;
 	}
 
 	inline act_t act_type()

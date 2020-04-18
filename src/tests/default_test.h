@@ -36,8 +36,9 @@ int deafault_test()
 
 	std::vector<uint32_t> layers_sizes{8,4,3,2};
 	std::vector<act_t> act_types_vec{act_t::ACT_NONE,act_t::ACT_ELU,act_t::ACT_ELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_NONE};
-	SANN::Model model(layers_sizes,0.1);
+	SANN::Model model(layers_sizes,0.001);
 	model.set_activations(act_types_vec);
+	model.set_optimizer(Optimizers::OPT_ADAM);//The default is Adam optimizer but you can select another
 	model.train(data_mat,label_mat,true);
 
 	MatrixXd results = model.predict(data_with_noise);

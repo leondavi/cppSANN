@@ -186,7 +186,7 @@ namespace SANN
 	 */
 	void Model::set_optimizer(Optimizers::opt_t opt_val,int layer_idx)
 	{
-		if(layer_idx < 0)
+		if(layer_idx == DEFAULT_OPTIMIZER_OUTPUT_SET)
 		{
 			layers_.back()->set_optimizer(select_optimizer(opt_val));
 		}
@@ -271,6 +271,7 @@ namespace SANN
     	std::cout<<"labels: \n"<<labels<<std::endl;
 #endif
 
+    	std::cout<<"in lr: "<<lr_<<std::endl;
     	//set learning rate and loss function to backward propagation
 		bp_.set_params(lr_,loss_func_);
 

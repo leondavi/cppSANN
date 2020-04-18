@@ -34,7 +34,7 @@ public:
 
 	//TODO add custom weights by function
 	Weights(uint32_t rows, uint32_t cols,bool random_init = true, double mu = 0, double sig = 1);
-	Weights(uint32_t rows, uint32_t cols,double weights_val,double bias_val);
+	Weights(uint32_t rows, uint32_t cols,double weights_val = 1,double bias_val = 0);
 	Weights(MatrixXd weights_mat,VectorXd bias) : weights_mat_(weights_mat),bias_(bias) { }
 
 	~Weights() {}

@@ -48,6 +48,16 @@ public:
 							  Model(layers,learning_rate,loss_func)
 	{}
 
+
+	double train(MatrixXd data,bool print_loss = false)
+	{
+		MatrixXd labels = data;
+		return Model::train(data,labels,print_loss);
+	}
+
+private:
+	using Model::train;
+
 };
 
 }

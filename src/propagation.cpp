@@ -159,7 +159,7 @@ bool BackwardPropagation::execute(VectorXd Y)
 					double dout_dnet_sc = dout_dnet(row);
 					//dcurr_dprev(row) = etot_dout_sc*dout_dnet_sc;
 					weights_grad.row(row) = *(previous_layer->get_neurons_ptr())*etot_dout_sc*dout_dnet_sc;
-					bias_diff(row) += etot_dout_sc*dout_dnet_sc;
+					bias_diff(row) += etot_dout_sc*dout_dnet_sc;//bias diff from neurons calculation of delta
 				}
 
 				if(DEBUG_FLAG_BP)
