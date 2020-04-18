@@ -1,7 +1,10 @@
 import os
 
+cppSANN_version = 1.0
+
 def printinfo(text):
 	print("info: "+text)
+	print("[cppSANN] Version - "+str(cppSANN_version))
 
 if os.path.isfile(".sconsign.dblite"):
 	os.remove(".sconsign.dblite")
