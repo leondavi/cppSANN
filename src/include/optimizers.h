@@ -291,7 +291,7 @@ private:
 
 public:
 
-	Adam(double b1 = 0.9,double b2 = 0.999,double eps = 1e-8,uint history_max_size = 200,double D = 1e-4) : Optimizer() ,
+	Adam(double b1 = 0.9,double b2 = 0.999,double eps = 1e-8,uint history_max_size = 50,double D = 1e-4) : Optimizer() ,
 																			  b1_(b1) ,b2_(b2),
 																			  epsilon_(eps),
 																			  history_max_size_(history_max_size),
