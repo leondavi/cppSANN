@@ -6,7 +6,9 @@
 
 namespace Activations
 {
-typedef enum {ACT_NONE,ACT_SIGMOID,ACT_RELU,ACT_LEAKY_RELU,ACT_SWISH,ACT_ELU,ACT_TANH} act_t;
+typedef enum {ACT_NONE,ACT_IDENTITY,ACT_SIGMOID,ACT_RELU,
+	          ACT_LEAKY_RELU,ACT_SWISH,ACT_ELU,
+			  ACT_TANH,ACT_GAUSSIAN,ACT_TOTAL} act_t;
 
 typedef std::function<double(double)> t_activation_func;
 
@@ -98,6 +100,9 @@ public:
 	- plausible than sigmoid
 	Cons:
 	- Not zero-centered output
+	- For x>0 - exploding gradient with output [0,inf]
+	- Dead neurons when value reaches 0.
+	- for x<0 gradient is 0 therefore weights will not get adjusted.
  */
 class ReLU : public ActivationFunction
 {
@@ -150,6 +155,8 @@ public:
 	- All benefits of ReLU
 	- Closer to zero mean outputs
 	- Negative saturation regime compared with leaky ReLU adds some robustness to noise
+   Cons:
+    - Given x>0, exploding gradient with an output range of [0,inf]
 
 	Note: argument a should be set here or use lambda function to envelope it
  */
@@ -163,7 +170,7 @@ public:
 
 	inline double function(double x)
 	{
-		return x>0 ? x : a_*(exp(x)-1);
+		return x > 0 ? x : a_*(exp(x)-1);
 	}
 
 	inline double function_derivative(double x)
@@ -209,13 +216,33 @@ public:
 	{
 		return ACT_TANH;
 	}
+};
+
+class Gaussian : public ActivationFunction
+{
+public:
+
+	inline double function(double x)
+	{
+		return exp(-x*x);
+	}
+
+	inline double function_derivative(double x)
+	{
+		return -2*x*exp(-x*x);
+	}
+
+	inline act_t act_type()
+	{
+		return ACT_GAUSSIAN;
+	}
 
 };
 
 /**
  * Doesn't impact anything - Mainly for debug or layers without activation function such as output layer
  */
-class None : public ActivationFunction
+class Identity : public ActivationFunction
 {
 public:
 	inline double function(double x)
@@ -227,6 +254,18 @@ public:
 	{
 		return 1.;
 	}
+
+	inline act_t act_type()
+	{
+		return ACT_IDENTITY;
+	}
+};
+
+class None : public Identity
+{
+public:
+	using Identity::function;
+	using Identity::function_derivative;
 
 	inline act_t act_type()
 	{
@@ -263,12 +302,15 @@ inline ActivationFunctionPtr select_activation(Activations::act_t ActVal)
 	switch (ActVal)
 	{
 		case Activations::ACT_NONE         : { chosen_act = std::make_shared<Activations::None>(); break; }
+		case Activations::ACT_IDENTITY     : { chosen_act = std::make_shared<Activations::Identity>(); break; }
 		case Activations::ACT_SIGMOID      : { chosen_act = std::make_shared<Activations::Sigmoid>(); break; }
 		case Activations::ACT_RELU         : { chosen_act = std::make_shared<Activations::ReLU>(); break; }
 		case Activations::ACT_LEAKY_RELU   : { chosen_act = std::make_shared<Activations::LeakyReLU>(); break; }
 		case Activations::ACT_SWISH        : { chosen_act = std::make_shared<Activations::Swish>(); break; }
 		case Activations::ACT_ELU          : { chosen_act = std::make_shared<Activations::ELU>(); break; }
 		case Activations::ACT_TANH         : { chosen_act = std::make_shared<Activations::Tanh>(); break; }
+		case Activations::ACT_GAUSSIAN     : { chosen_act = std::make_shared<Activations::Gaussian>(); break;}
+		default                            : { chosen_act = std::make_shared<Activations::None>();}
 	}
 
 	return chosen_act;
