@@ -15,14 +15,14 @@ int ae_test()
 	std::cout<<"Autoencoder test \n---------------------"<<std::endl;
 	std::vector<uint32_t> layers_sizes{16,8,4,8,16};
 	std::vector<act_t> act_types_vec{act_t::ACT_NONE,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_LEAKY_RELU,act_t::ACT_NONE};
-	double lr = 1e-5;
+	double lr = 1e-4;
 	SANN::Autoencoder model(layers_sizes,lr);
 	model.set_optimizer(Optimizers::OPT_ADAM);
 	model.set_activations(act_types_vec);
 
 	std::cout<<"loss function: "<<model.get_loss()<<std::endl;
 
-	MatrixXd rand_mat = (MatrixXd::Ones(128,16)+MatrixXd::Ones(128,16))/2;
+	MatrixXd rand_mat = (MatrixXd::Random(128,16)+MatrixXd::Ones(128,16))/2;
 	MatrixXd data_mat(rand_mat.rows()*4,rand_mat.cols());
 	data_mat << rand_mat,rand_mat,rand_mat,rand_mat;
 	MatrixXd res;
