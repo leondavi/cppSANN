@@ -55,6 +55,11 @@ public:
 };
 
 
+/**
+ * Backward propagation class
+ * The algorithm is based on the excellent explanation given by Matt Mazur:
+ * "A Step by Step Backpropagation Example" - https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+ */
 class BackwardPropagation
 {
 

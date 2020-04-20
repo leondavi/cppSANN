@@ -30,7 +30,7 @@ int ae_test()
 
 
 	double loss;
-	loss = model.train(data_mat,true);
+	loss = model.train(data_mat);
 	std::cout<<"1st training loss: "<<loss<<std::endl;
 	loss = model.train(data_mat);
 	std::cout<<"2nd training loss: "<<loss<<std::endl;
