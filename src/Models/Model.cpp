@@ -324,7 +324,7 @@ namespace SANN
     MatrixXd Model::predict(const MatrixXd &data)
     {
     	MatrixXd prediction(data.rows(),layers_.back()->get_layer_size());
-    	if (layers_.back()->get_layer_size() != data.cols())
+    	if (layers_.front()->get_layer_size() != data.cols())
     	{
     		throw "Input layer and number of features are not equal!";
     	}
