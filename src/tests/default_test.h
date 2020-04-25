@@ -21,7 +21,7 @@ int deafault_test()
 //										1,2,3,8,3,2,1,0,
 //										1,2,3,8,3,2,1,0,
 //										1,2,3,8,3,2,1,0;
-	MatrixXd label_mat(4,2); label_mat <<0,1,
+	MatrixXd label_mat(4,2); label_mat << 0,1,
 										  0,1,
 										  0,1,
 										  0,1;
