@@ -264,7 +264,7 @@ namespace SANN
      * data row size has to be the same as input size
      * labels row size has to be the same as output size
      */
-    double Model::train(MatrixXd data,MatrixXd labels,bool print_loss)
+    double Model::train(const MatrixXd &data,const MatrixXd &labels,bool print_loss)
     {
 #if DEBUG_TRAIN
     	std::cout<<"data: \n"<<data<<std::endl;
@@ -321,7 +321,7 @@ namespace SANN
     	return bp_.get_error_val();
     }
 
-    MatrixXd Model::predict(MatrixXd data)
+    MatrixXd Model::predict(const MatrixXd &data)
     {
     	MatrixXd prediction(data.rows(),layers_.back()->get_layer_size());
     	if(!layers_connected_)
