@@ -39,7 +39,7 @@ int ae_test()
 	loss = model.train(data_mat);
 	std::cout<<"4rd training loss: "<<loss<<std::endl;
 
-	res = model.predict(data_mat);
+	model.predict(data_mat,res);
 	//std::cout<<"Results: \n"<<res<<std::endl;
 
 	double distance = (res-data_mat).array().abs().sum();

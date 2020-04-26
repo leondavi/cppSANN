@@ -79,7 +79,7 @@ namespace SANN
 		std::list<std::shared_ptr<ANN::Layer>> get_list_of_layers() { return this->layers_; }
 
 		virtual double train(const MatrixXd &data,const MatrixXd &labels,bool print_loss = false); //return value of final loss
-	    MatrixXd predict(const MatrixXd &data); //returns the predictions - each row is a single prediction
+	    void predict(const MatrixXd &data,MatrixXd &y_pred); //returns the predictions - each row is a single prediction
 
 		//setters
 	    void set_layers(std::vector<uint32_t> model_by_layers_size,std::vector<Activations::act_t> model_activations = std::vector<Activations::act_t>());

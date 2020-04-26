@@ -321,9 +321,9 @@ namespace SANN
     	return bp_.get_error_val();
     }
 
-    MatrixXd Model::predict(const MatrixXd &data)
+    void Model::predict(const MatrixXd &data,MatrixXd &y_pred)
     {
-    	MatrixXd prediction(data.rows(),layers_.back()->get_layer_size());
+    	y_pred = MatrixXd(data.rows(),layers_.back()->get_layer_size());
     	if (layers_.front()->get_layer_size() != data.cols())
     	{
     		throw "Input layer and number of features are not equal!";
@@ -338,9 +338,8 @@ namespace SANN
 			layers_.front()->set_new_val_to_neurons(input_data);
 			fp_.set_input_layer(layers_.front());
 			fp_.execute();
-			prediction.row(row) = (*layers_.back()->get_neurons_ptr()).transpose();
+			y_pred.row(row) = (*layers_.back()->get_neurons_ptr()).transpose();
 		}
-		return prediction;
     }
 
 }

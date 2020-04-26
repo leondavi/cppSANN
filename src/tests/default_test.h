@@ -41,7 +41,7 @@ int deafault_test()
 	model.set_optimizer(Optimizers::OPT_ADAM);//The default is Adam optimizer but you can select another
 	model.train(data_mat,label_mat,true);
 
-	MatrixXd results = model.predict(data_with_noise);
+	MatrixXd results; model.predict(data_with_noise,results);
 	std::cout<<"data with noise: \n"<<data_with_noise<<std::endl;
 	std::cout<<"results: \n"<<results<<std::endl;
 
