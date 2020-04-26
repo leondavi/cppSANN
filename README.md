@@ -1,9 +1,10 @@
 # cppSANN
 
 This library is a simple implementation of artificial neural network.
-It doesn't use logger or complex things in order to achieve an easy integration with other 
-cpp programs. It is based on [Eigen library](https://eigen.tuxfamily.org/dox/). 
-Implementations Include comments and explanation for an easier learning. 
+It is designed as a light library in order to make the integration of it easier.
+It is based on [Eigen library](https://eigen.tuxfamily.org/dox/). 
+The components of the neural network accompained with comments and explanation
+to mitigate the learning curve. Expanding this library should be also simple.  
 
 ### Requiremnts:
 
