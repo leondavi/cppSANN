@@ -13,7 +13,7 @@ namespace ANN
 
 //-------- static functions ---------
 
-
+// connects the layers 
 bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Layer> next_layer,bool random_init)
 {
 
