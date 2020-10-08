@@ -16,7 +16,7 @@ to mitigate the learning curve. Expanding this library should be also simple.
 ### Build Clean and Run:
 
 1. Build by running: ```scons``` in main directory. 
-2. Build as shared library by running: ```scons shared=1```.
+2. Build as a shared library by running: ```scons shared=1```.
 3. Run tests by calling ```build/cppSANN_exec```.
 4. Clean the project: ```scons -c``` in main directory. 
 
