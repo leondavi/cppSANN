@@ -1,5 +1,9 @@
 # cppSANN
 
+<p align="center">
+  <img src="cppsann_logo_large.jpg" width="500" title="cppSANN">
+</p>
+
 This library is a simple implementation of artificial neural network.
 It is designed as a light library in order to make the integration of it easier.
 It is based on [Eigen library](https://eigen.tuxfamily.org/dox/). 
