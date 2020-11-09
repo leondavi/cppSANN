@@ -25,7 +25,7 @@ bool Layer::connect_layers(std::weak_ptr<Layer> current_layer,std::weak_ptr<Laye
 		next_layer_inst->set_previous_layer_ptr(current_layer);
 		current_layer_inst->set_next_layer_ptr(next_layer);
 
-		// Creating weights instance
+		// Creating an instance of weights
 		// rows ---> Next layer
 		// cols ---> Current Layer
 		// Wx+b where W is NxC and x is Cx1 (N-Next layer dimension,C-Current layer dimension)
