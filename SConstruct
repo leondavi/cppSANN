@@ -40,7 +40,11 @@ env.AppendUnique(CPPPATH = include_paths)
 
 debug = ARGUMENTS.get('debug_info', 0)
 if int(debug):
+	print("[cppSANN] Debug Compilation")
 	env.Append(CPPFLAGS = '-g')
+else
+	print("[cppSANN] Release Compilation")
+	env.Append(CPPFLAGS = '-O2')
 
 SHARED_LIB_FLAG = False
 shared_lib = ARGUMENTS.get('shared', 0)
