@@ -42,7 +42,7 @@ debug = ARGUMENTS.get('debug_info', 0)
 if int(debug):
 	print("[cppSANN] Debug Compilation")
 	env.Append(CPPFLAGS = '-g')
-else
+else:
 	print("[cppSANN] Release Compilation")
 	env.Append(CPPFLAGS = '-O2')
 
