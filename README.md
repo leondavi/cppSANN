@@ -1,4 +1,5 @@
 # cppSANN
+### A Simple Artificial Neural Network for C++
 
 <p align="center">
   <img src="cppsann_logo_large.jpg" width="500" title="cppSANN">
