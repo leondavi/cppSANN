@@ -88,11 +88,12 @@ namespace SANN
 
 		void set_learning_rate(double learning_rate) {this->lr_ = learning_rate; }
 		void set_optimizer(Optimizers::opt_t opt_val,int layer_idx = DEFAULT_OPTIMIZER_OUTPUT_SET);
+		void set_weights(std::vector <std::shared_ptr<ANN::Weights>> & weights);
 
 
-		std::vector<std::shared_ptr<ANN::Weights>> get_weights_of_model();
-		std::vector<VectorXd> get_neurons_of_model();
-		std::vector<act_t> get_activations_types_of_model();
+		void get_weights(std::vector<std::shared_ptr<ANN::Weights>> &weights);
+		void get_neurons(std::vector<VectorXd> &vec_of_layers_of_neurons);
+		std::vector<act_t> get_activations_types();
 		inline double get_lr() { return this->lr_; }
 		inline LossFunctions::loss_t get_loss() { return this->loss_func_->loss_type(); }
 

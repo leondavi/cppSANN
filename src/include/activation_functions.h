@@ -1,6 +1,8 @@
 #pragma once
 
-#include <eigen3/Eigen/Eigen>
+#include <functional>
+#include <Eigen/Core>
+#include <cmath>
 
 
 
@@ -44,7 +46,7 @@ class Sigmoid : public ActivationFunction
 public:
 	inline double function(double x)
 	{
-		return 1./(1.+exp(-x));
+		return 1./(1.+std::exp(-x));
 	}
 
 	inline double function_derivative(double x)
@@ -170,12 +172,12 @@ public:
 
 	inline double function(double x)
 	{
-		return x > 0 ? x : a_*(exp(x)-1);
+		return x > 0 ? x : a_*(std::exp(x)-1);
 	}
 
 	inline double function_derivative(double x)
 	{
-		return x > 0 ? 1 : a_*exp(x);
+		return x > 0 ? 1 : a_*std::exp(x);
 	}
 
 	inline act_t act_type()
@@ -224,12 +226,12 @@ public:
 
 	inline double function(double x)
 	{
-		return exp(-x*x);
+		return std::exp(-x*x);
 	}
 
 	inline double function_derivative(double x)
 	{
-		return -2*x*exp(-x*x);
+		return -2*x*std::exp(-x*x);
 	}
 
 	inline act_t act_type()

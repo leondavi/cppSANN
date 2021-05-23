@@ -1,9 +1,11 @@
 #pragma once
 
-#include <eigen3/Eigen/Eigen>
+#include <iostream>
+#include <Eigen/Core>
+#include <memory>
+
 #include "math_methods.h"
 #include "normalization_functions.h"
-#include <iostream>
 
 using namespace Eigen;
 

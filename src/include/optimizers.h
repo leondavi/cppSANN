@@ -1,9 +1,10 @@
 #pragma once
 
-#include <eigen3/Eigen/Eigen>
+#include <Eigen/Core>
 #include "loss_functions.h"
 #include <iostream>
 #include <deque>
+#include <cstdint>
 
 #define MINI_BATCH_GRADIENT_DEFAULT_BATCH_SIZE 50
 #define MOMENTUM_DEFAULT_GAMMA_VAL 0.9
@@ -18,12 +19,12 @@ class Optimizer
 public:
 	virtual ~Optimizer() {};
 
-	virtual void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) = 0; //overwrite weights
+	virtual void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) = 0; //overwrite weights
 };
 
 class None : public Optimizer
 {
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 		Weights -= W_grad;
 		bias -= bias_diff;
@@ -39,7 +40,7 @@ public:
 	/**
 	 * Overwrites Weights with result of gradients change
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 	//	std::cout<<"in Weights:\n"<<Weights<<std::endl;
 		Weights -= lr*W_grad;
@@ -71,7 +72,7 @@ public:
 	/**
 	 * Overwrites Weights
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 		if(curr_batch_ == 0)
 		{
@@ -123,7 +124,7 @@ public:
 	/**
 	 * Overwrites Weights
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 		if (init)
 		{
@@ -194,7 +195,7 @@ public:
 	/**
 	 * Overwrites Weights
 	 */
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 		if (init)
 		{
@@ -235,7 +236,7 @@ public:
 	Adagrad(double epsilon = 1e-8) : Optimizer(),epsilon_(epsilon),init(true)
 		{}
 
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 		if (init)
 		{
@@ -306,7 +307,7 @@ public:
 		return (matrixA.array()*matrixA.array()-matrixB.array()*matrixB.array()).sum() < D;
 	}
 
-	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd bias_diff, double lr) override
+	void optimize(MatrixXd &Weights,const MatrixXd &W_grad, VectorXd &bias, const VectorXd &bias_diff, double lr) override
 	{
 		former_gradients.push_back(W_grad);
 		MatrixXd grad_squared;
