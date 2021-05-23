@@ -112,7 +112,7 @@ public:
 		this->loss_func_ = loss_func;
 	}
 
-	bool execute(VectorXd Y);
+	bool execute(VectorXd &Y);
 
 	inline double get_error_val() {return this->error_;}
 };

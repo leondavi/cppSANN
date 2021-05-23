@@ -8,8 +8,6 @@
 #ifndef SRC_WEIGTHS_H_
 #define SRC_WEIGTHS_H_
 
-#include <eigen3/Eigen/Dense>
-
 #include "math_methods.h"
 
 using namespace Eigen;
@@ -49,10 +47,10 @@ public:
 
 
 	//---- setters ----//
-	void set_bias(VectorXd bias_val) { this->bias_ = bias_val; }
-	void set_weights(MatrixXd new_weights) { this->weights_mat_ = new_weights; }
-	void subtract_weights(MatrixXd diff_weights) { this->weights_mat_ -= diff_weights; }
-	void subtract_bias(VectorXd diff) {this->bias_ -= diff;}
+	void set_bias(VectorXd &bias_val) { this->bias_ = bias_val; }
+	void set_weights(MatrixXd &new_weights) { this->weights_mat_ = new_weights; }
+	void subtract_weights(MatrixXd &diff_weights) { this->weights_mat_ -= diff_weights; }
+	void subtract_bias(VectorXd &diff) {this->bias_ -= diff;}
 
 	VectorXd dot(VectorXd given_vec)
 	{

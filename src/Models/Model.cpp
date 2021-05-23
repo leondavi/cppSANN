@@ -198,36 +198,52 @@ namespace SANN
 
 	};
 
-	std::vector<std::shared_ptr<ANN::Weights>> Model::get_weights_of_model()
+	void Model::set_weights(std::vector <std::shared_ptr<ANN::Weights>> &weights)
 	{
-		std::vector<std::shared_ptr<ANN::Weights>> vec_of_weights_ptrs;
+		if(weights.size() == layers_.size() - 1)
+		{
+			auto weights_iterator = weights.begin();
+			for (std::list<std::shared_ptr<ANN::Layer>>::iterator layers_it = layers_.begin() ; layers_it != layers_.end() ; layers_it++)
+			{
+				if((*layers_it)->get_layer_type() != ANN::OUTPUT_LAYER)
+				{
+					(*layers_it)->set_output_weights(*weights_iterator); //stores weights instance (with bias in it)					(*(layers_it+1))->set_input_weights()
+					(*std::next(layers_it))->set_input_weights(*weights_iterator); // set next layer input weights
+				}
+			}
+		}
+		else
+		{
+			throw std::out_of_range("Weights and layers vectors sizes are not equal!");
+		}
+	}
+
+	void Model::get_weights(std::vector<std::shared_ptr<ANN::Weights>> &weights)
+	{
 		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
 		{
 			if((*it)->get_layer_type() != ANN::OUTPUT_LAYER)
 			{
-				vec_of_weights_ptrs.push_back((*it)->get_output_weights_ptr());
+				weights.push_back((*it)->get_output_weights_ptr());
 			}
 		}
-		return vec_of_weights_ptrs;
 	}
 
 	/**
 	 * Returns a vector of neurons vectors copies for each layer in model
 	 */
-	std::vector<VectorXd> Model::get_neurons_of_model()
+	void Model::get_neurons(std::vector<VectorXd> &vec_of_layers_of_neurons)
 	{
-		std::vector<VectorXd> vec_of_layers_of_neurons;
 		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)
 		{
 			vec_of_layers_of_neurons.push_back((*it)->get_neurons());
 		}
-		return vec_of_layers_of_neurons;
 	}
 
 	/**
 	 * Get activation ids of each layer
 	 */
-	std::vector<act_t> Model::get_activations_types_of_model()
+	std::vector<act_t> Model::get_activations_types()
 	{
 		std::vector<act_t> vec_of_activations;
 		for (std::list<std::shared_ptr<ANN::Layer>>::iterator it = layers_.begin() ; it != layers_.end() ; it++)

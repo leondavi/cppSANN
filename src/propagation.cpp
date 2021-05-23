@@ -93,7 +93,7 @@ bool ForwardPropagation::execute()
 /* 		BackwardPropagation 		*/
 /************************************/
 
-bool BackwardPropagation::execute(VectorXd Y)
+bool BackwardPropagation::execute(VectorXd &Y)
 {
 	if(this->output_layer_ptr_)
 	{

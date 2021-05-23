@@ -1,6 +1,7 @@
 import os
 
-cppSANN_version = 1.0
+cppSANN_version = 1.1
+EIGEN_INCLUDE_PATH = "/usr/include/eigen3"
 
 def printinfo(text):
 	print("info: "+text)
@@ -22,7 +23,7 @@ src_dir = os.path.join(project_dir,'src')
 # Set our required libraries
 libraries 		= []
 library_paths 	= ''
-include_paths	= [os.path.join(src_dir,'include')]
+include_paths	= [os.path.join(src_dir,'include'),EIGEN_INCLUDE_PATH]
 cppDefines 		= {}
 cppFlags 		= ['-Wall']#, '-Werror']
 cxxFlags 		= ['-std=c++11']

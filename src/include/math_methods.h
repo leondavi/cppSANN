@@ -1,8 +1,9 @@
 #pragma once
 
-#include <eigen3/Eigen/Eigen>
+#include <Eigen/Core>
 #include <random>
 #include <iostream>
+#include <cstdint>
 
 namespace ExtMath //extended math operations to eigen
 {

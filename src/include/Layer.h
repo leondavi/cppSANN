@@ -8,7 +8,6 @@
 #ifndef SRC_LAYER_H_
 #define SRC_LAYER_H_
 
-#include <eigen3/Eigen/Dense>
 #include <stdlib.h>
 #include <memory>
 
