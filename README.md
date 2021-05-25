@@ -25,6 +25,9 @@ to mitigate the learning curve. Expanding this library should be also simple.
 3. Run tests by calling ```build/cppSANN_exec```.
 4. Clean the project: ```scons -c``` in main directory. 
 
+### Examples
+Examples of using cppSANN are located under src/tests directory. 
+
 ## License 
 cppSANN is given for free. (You should inspect Eigen library license also), 
 Please cite cppSANN if you use it in your research or application. 
