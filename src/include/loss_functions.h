@@ -40,7 +40,7 @@ typedef enum {LOSS_CROSS_ENTROPY,LOSS_MSE} loss_t;
 
 		inline VectorXd func(VectorXd &y_pred, VectorXd &y) override
 		{
-			VectorXd res = -y.array()*y_pred.array().log();
+			VectorXd res = -y.array()*softmax(y_pred).array().log();
 			return res;
 
 		}
