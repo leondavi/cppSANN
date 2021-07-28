@@ -16,7 +16,8 @@ to mitigate the learning curve. Expanding this library should be also simple.
 1. Eigen library located in default location (or use symbolic link to real location). 
    In ubuntu: ```sudo apt install libeigen3-dev ```
 2. Boost library: ```sudo apt-get install libboost-all-dev```
-3. scons build tool: ```sudo apt-get install -y scons```
+3. g++ and gcc: ```sudo apt install g++-9 libstdc++-9-dev g++-multilib g++-9-multilib gcc-9-doc libstdc++-9-doc```
+4. scons build tool: ```sudo apt-get install -y scons```
 
 ### Build Clean and Run:
 
