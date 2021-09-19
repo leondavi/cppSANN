@@ -40,7 +40,7 @@ typedef enum {LOSS_CROSS_ENTROPY,LOSS_MSE} loss_t;
 
 		inline VectorXd func(VectorXd &y_pred, VectorXd &y) override
 		{
-			VectorXd res = -y.array()*softmax(y_pred).array().log();
+			VectorXd res = y.array()*softmax(y_pred).array().log();
 			return res;
 
 		}
@@ -48,7 +48,7 @@ typedef enum {LOSS_CROSS_ENTROPY,LOSS_MSE} loss_t;
 		{
 		// based on http://machinelearningmechanic.com/deep_learning/2019/09/04/cross-entropy-loss-derivative.html
 		        VectorXd qi = softmax(y_pred);
-			return qi - y;
+			return y - qi;
 		}
 
 		loss_t loss_type()
