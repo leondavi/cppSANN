@@ -285,9 +285,8 @@ namespace SANN
 #if DEBUG_TRAIN
     	std::cout<<"data: \n"<<data<<std::endl;
     	std::cout<<"labels: \n"<<labels<<std::endl;
+	std::cout<<"in lr: "<<lr_<<std::endl;
 #endif
-
-    	std::cout<<"in lr: "<<lr_<<std::endl;
     	//set learning rate and loss function to backward propagation
 		bp_.set_params(lr_,loss_func_);
 
